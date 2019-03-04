@@ -13,8 +13,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="316" column="36" lean-forward="true" selection-start-line="316" selection-start-column="36" selection-end-line="316" selection-end-column="36" />
+            <state relative-caret-position="377">
+              <caret line="110" column="25" lean-forward="true" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+              <folding>
+                <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,7 +59,7 @@
     <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -95,11 +98,12 @@
       <workItem from="1551672166898" duration="892000" />
       <workItem from="1551673281878" duration="34000" />
       <workItem from="1551673694826" duration="3475000" />
+      <workItem from="1551677335476" duration="9941000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29635000" />
+    <option name="totallyTimeSpent" value="39576000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -154,8 +158,11 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="316" column="36" lean-forward="true" selection-start-line="316" selection-start-column="36" selection-end-line="316" selection-end-column="36" />
+        <state relative-caret-position="377">
+          <caret line="110" column="25" lean-forward="true" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+          <folding>
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
