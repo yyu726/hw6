@@ -98,6 +98,28 @@
             margin-left: 250px;
         }
 
+        #iframe {
+            margin:auto;
+            width:1400px;
+            outline: dotted;
+        }
+
+
+
+
+        table {
+            width:1400px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 2px solid rgb(200, 200, 200);
+            font-size: 20px;
+        }
+
+        img {
+            width:100px;
+        }
     </style>
 </head>
 
@@ -209,6 +231,7 @@ function processFinding() {
         $item[$i]["Name"] = $itemTemp->{'title'}[0];
         $item[$i]["Price"]["Currency"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'};
         $item[$i]["Price"]["Value"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'};
+        //$item[$i]["Price"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'} . $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'};
         $item[$i]["Zip"] = isset($itemTemp->{'postalCode'}[0]) ? $itemTemp->{'postalCode'}[0] : 'N/A';
         $item[$i]["Condition"] = isset($itemTemp->{'condition'}[0]) ? $itemTemp->{'condition'}[0]->{'conditionDisplayName'}[0] : 'N/A';
         if (isset($itemTemp->{'shippingInfo'}[0]->{'shippingServiceCost'}[0]->{'__value__'})) {
@@ -226,13 +249,15 @@ function processFinding() {
     $itemJSON['Title'] = 'fingdingResult';
     $itemJSON['Header'] = array('Index', 'Photo', 'Name', 'Price', 'Zip code', 'Condition', 'Shipping Option');
     $itemJSON['Item'] = $item;
-    //$itemJSON = json_encode($itemJSON);
-    var_dump($itemJSON);
+    $itemJSON = json_encode($itemJSON);
+    //var_dump($itemJSON);
 }
 if (isset($_POST["keyword"])) {
     requestFinding();
     processFinding();
 }
+/*$test = "test";
+echo ($test);*/
 ?>
 
 <div class="mainbox">
@@ -240,7 +265,7 @@ if (isset($_POST["keyword"])) {
         <p class="title">Product Search</p>
     </div>
     <div class="divideLine"></div>
-    <form name="myform" method="POST" id="form" onsubmit="receiveJSON()">
+    <form name="myform" method="POST" id="form" target="iframe" onsubmit="receiveJSON();event.preventDefault();event.stopPropagation()">
         <b>Keyword</b>
         <input class="keywordInput" type="text" name="keyword" maxlength="255" size="100" value="USC" required/>
         <br/>
@@ -279,57 +304,108 @@ if (isset($_POST["keyword"])) {
         <br/>
         <input id="submitButton" type="submit" value="Search" disabled>
         <input type="reset" value="Clear">
-        <script type="text/javascript">
-            function enableSearch(checkbox) {
-                if (checkbox.checked == true) {
-                    document.getElementById("milesInput").removeAttribute("disabled");
-                    document.getElementById("zipRadio").removeAttribute("disabled");
-                    document.getElementById("hereRadio").removeAttribute("disabled");
-                    document.getElementById("milesLabel").setAttribute("style", "color: black");
-                    document.getElementById("hereLabel").setAttribute("style", "color: black");
-                    if (document.getElementById("zipRadio").checked == true) {
-                        document.getElementById("zipInput").removeAttribute("disabled");
+    </form>
+
+</div>
+<div id="iframe" name="iframe">
+
+</div>
+
+
+<script type="text/javascript">
+    function enableSearch(checkbox) {
+        if (checkbox.checked == true) {
+            document.getElementById("milesInput").removeAttribute("disabled");
+            document.getElementById("zipRadio").removeAttribute("disabled");
+            document.getElementById("hereRadio").removeAttribute("disabled");
+            document.getElementById("milesLabel").setAttribute("style", "color: black");
+            document.getElementById("hereLabel").setAttribute("style", "color: black");
+            if (document.getElementById("zipRadio").checked == true) {
+                document.getElementById("zipInput").removeAttribute("disabled");
+            } else {
+                document.getElementById("zipInput").setAttribute("disabled", "disabled");
+            }
+        } else {
+            document.getElementById("milesInput").setAttribute("disabled", "disabled");
+            document.getElementById("zipRadio").setAttribute("disabled", "disabled");
+            document.getElementById("zipInput").setAttribute("disabled", "disabled");
+            document.getElementById("hereRadio").setAttribute("disabled", "disabled");
+            document.getElementById("milesLabel").setAttribute("style", "color: grey");
+            document.getElementById("hereLabel").setAttribute("style", "color: grey");
+        }
+    }
+
+    function disableZip(radio) {
+        if (radio.checked == true) {
+            document.getElementById("zipInput").setAttribute("disabled", "disabled");
+        }
+    }
+
+    function enableZip(radio) {
+        if (radio.checked == true) {
+            document.getElementById("zipInput").removeAttribute("disabled");
+        }
+    }
+    function receiveJSON() {
+        jsonObj = <?php echo $itemJSON; ?>;
+        document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+    }
+
+    function receiveJSON1() {
+        jsonObj = <?php echo $itemJSON; ?>;
+        document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+        hWin = window.open("", "Assignment4", "height=600,width=1200");
+        jsonObj.onload = generateHTML(jsonObj);
+        hWin.document.write(html_text);
+        hWin.document.close();
+    }
+
+    function generateHTML(jsonObj) {
+        root = jsonObj.DocumentElement;
+        html_text = "<html><head><title>Highest-grossing Films</title></head><body style='font-family:Times New Roman'>";
+        html_text += "<table  >";
+        html_text += "<tbody>";
+        html_text += "<tr>";
+        // output the headers
+        var tableHeader = jsonObj.Header;
+        for (i = 0; i < tableHeader.length; i++) {
+            html_text += "<th>" + tableHeader[i] + "</th>";
+        }
+        html_text += "</tr>";
+        // output out the values
+        var items = jsonObj.Item;
+        for (i = 0; i < items.length; i++) //do for all films (one per row)
+        {
+            itemNodeList = items[i]; //get properties of a film (an object)
+            html_text += "<tr>";      //start a new row of the output table
+            var item_keys = Object.keys(itemNodeList);
+            for (j = 0; j < item_keys.length; j++) {
+                prop = item_keys[j];
+                if (prop == 'Price') {
+                    html_text += "<td>"
+                    if (itemNodeList[prop].Currency == "USD") {
+                        html_text += '$';
+                    }
+                    html_text += itemNodeList[prop].Value + "</td>";
+                } else if (item_keys[j] == "Photo") {//handle images separately
+                    if (itemNodeList[prop] == "") {
+                        html_text += "<td>" + "</td>";
                     } else {
-                        document.getElementById("zipInput").setAttribute("disabled", "disabled");
+                        html_text += "<td><img src='" + itemNodeList[prop] + "'></td>";
                     }
                 } else {
-                    document.getElementById("milesInput").setAttribute("disabled", "disabled");
-                    document.getElementById("zipRadio").setAttribute("disabled", "disabled");
-                    document.getElementById("zipInput").setAttribute("disabled", "disabled");
-                    document.getElementById("hereRadio").setAttribute("disabled", "disabled");
-                    document.getElementById("milesLabel").setAttribute("style", "color: grey");
-                    document.getElementById("hereLabel").setAttribute("style", "color: grey");
+                    html_text += "<td>" + itemNodeList[prop] + "</td>";
                 }
+
             }
-
-            function disableZip(radio) {
-                if (radio.checked == true) {
-                    document.getElementById("zipInput").setAttribute("disabled", "disabled");
-                }
-            }
-
-            function enableZip(radio) {
-                if (radio.checked == true) {
-                    document.getElementById("zipInput").removeAttribute("disabled");
-                }
-            }
-
-            function receiveJSON() {
-
-
-                alert("<?php echo json_encode($itemJSON); ?>");
-            }
-            function generateFindingHTML(jsonObj) {
-                document.write(jsonObj);
-            }
-        </script>
-
-
-
-
-
-    </form>
-</div>
+            html_text += "</tr>";
+        }
+        html_text += "</tbody>";
+        html_text += "</table>";
+        html_text += "</body></html>";
+        return html_text;
+    }
+</script>
 
 </body>
 
