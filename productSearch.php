@@ -309,7 +309,7 @@
             $itemJSON['Header'] = array('Index', 'Photo', 'Name', 'Price', 'Zip code', 'Condition', 'Shipping Option');
             $itemJSON['Item'] = $item;
             $itemJSON = json_encode($itemJSON);
-            //var_dump($itemJSON);
+            var_dump($itemJSON);
         }
         if (isset($_POST["keyword"])) {
             requestFinding();
