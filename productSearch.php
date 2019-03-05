@@ -99,16 +99,14 @@
         }
 
         #iframe {
-            margin:auto;
-            width:1400px;
+            margin: auto;
+            width: 1400px;
             outline: dotted;
         }
 
 
-
-
         table {
-            width:1400px;
+            width: 1400px;
             border-collapse: collapse;
         }
 
@@ -118,12 +116,12 @@
         }
 
         img {
-            width:100px;
+            width: 100px;
         }
     </style>
 </head>
 
-<body onload="getLocation()">
+<body onload="getLocation();receiveJSON()">
 <script>
     function getLocation() {
         var s = document.createElement("script");
@@ -143,94 +141,93 @@
 
 <?php
 /**/
-$requestObj;
-$itemJSON;
-function requestFinding() {
-    if (isset($_POST["keyword"])) {
-        //var_dump($_POST);
-        $OPERATION_NAME = 'findItemsAdvanced';
-        $SERVICE_VERSION = '1.0.0';
-        $SECURITY_APPNAME = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
-        $RESPONSE_DATA_FORMAT = 'JSON';
-        $paginationInput_entriesPerPage = '20';
-        $keywords = $_POST["keyword"];
-        $categoryArray = array('All' => NULL, 'Art' => '550', 'Baby' => '2984', 'Books' => '267', 'CSA' => '11450',
-            'CTN' => '58058', 'HB' => '26395', 'Music' => '11233', 'VGC' => '1249');
-        $categoryId = $categoryArray[$_POST["category"]];
-        $buyerPostalCode = isset($_POST["nearbySearch"]) ? $_POST["centerpoint"] : NULL;
-        $MaxDistance = isset($_POST["nearbySearch"]) ? $_POST["distance"] : NULL;
-        $LocalPickupOnly = isset($_POST["shipping1"]) ? "true" : NULL;
-        $FreeShippingOnly = isset($_POST["shipping2"]) ? "true" : NULL;
-        $Condition = NULL;
-        if (isset($_POST["condition1"])) {
-            $Condition[] = $_POST["condition1"];
-        }
-        if (isset($_POST["condition2"])) {
-            $Condition[] = $_POST["condition2"];
-        }
-        if (isset($_POST["condition3"])) {
-            $Condition[] = $_POST["condition3"];
-        }
-        $requestURL = "https://svcs.ebay.com/services/search/FindingService/v1?";
-        $requestURL = $requestURL . "OPERATION-NAME=" . $OPERATION_NAME;
-        $requestURL = $requestURL . "&SERVICE-VERSION=" . $SERVICE_VERSION;
-        $requestURL = $requestURL . "&SECURITY-APPNAME=" . $SECURITY_APPNAME;
-        $requestURL = $requestURL . "&RESPONSE-DATA-FORMAT=" . $RESPONSE_DATA_FORMAT;
-        $requestURL = $requestURL . "&REST-PAYLOAD";
-        $requestURL = $requestURL . "&paginationInput.entriesPerPage=" . $paginationInput_entriesPerPage;
-        $requestURL = $requestURL . "&keywords=" . rawurlencode($keywords);
-        if (isset($categoryId)) {
-            $requestURL = $requestURL . "&categoryId=" . $categoryId;
-        }
-        if (isset($buyerPostalCode)) {
-            $requestURL = $requestURL . "&buyerPostalCode=" . $buyerPostalCode;
-        }
-        $filterCount = 0;
-        if (isset($MaxDistance)) {
-            $requestURL = $requestURL . "&itemFilter($filterCount).name=Maxdistance";
-            $requestURL = $requestURL . "&itemFilter($filterCount).value=" . $MaxDistance;
-            $filterCount++;
-        }
-        if (isset($FreeShippingOnly)) {
-            $requestURL = $requestURL . "&itemFilter($filterCount).name=FreeShippingOnly";
-            $requestURL = $requestURL . "&itemFilter($filterCount).value=" . $FreeShippingOnly;
-            $filterCount++;
-        }
-        if (isset($LocalPickupOnly)) {
-            $requestURL = $requestURL . "&itemFilter($filterCount).name=LocalPickupOnly";
-            $requestURL = $requestURL . "&itemFilter($filterCount).value=" . $LocalPickupOnly;
-            $filterCount++;
-        }
-        $requestURL = $requestURL . "&itemFilter($filterCount).name=HideDuplicateItem";
-        $requestURL = $requestURL . "&itemFilter($filterCount).value=true";
-        $filterCount++;
-        if (!is_null($Condition)){
-            $requestURL = $requestURL . "&itemFilter($filterCount).name=Condition";
-            for ($i = 0; $i < count($Condition); $i++) {
-                $requestURL = $requestURL . "&itemFilter($filterCount).value($i)=" . $Condition[$i];
-            }
-            $filterCount++;
-        }
-        //echo $requestURL;
-        $jsontext = file_get_contents($requestURL);
-        //echo $jsontext;
-        global $requestObj;
-        $requestObj = json_decode($jsontext);
-        //var_dump($requestObj);
+function searchRequest($form)
+{
+    $OPERATION_NAME = 'findItemsAdvanced';
+    $SERVICE_VERSION = '1.0.0';
+    $SECURITY_APPNAME = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
+    $RESPONSE_DATA_FORMAT = 'JSON';
+    $paginationInput_entriesPerPage = '20';
+    $keywords = $form["keywords"];
+    $categoryArray = array('All' => NULL, 'Art' => '550', 'Baby' => '2984', 'Books' => '267', 'CSA' => '11450',
+        'CTN' => '58058', 'HB' => '26395', 'Music' => '11233', 'VGC' => '1249');
+    $categoryId = $categoryArray[$form["category"]];
+    $buyerPostalCode = isset($form["nearbySearch"]) ? $form["centerpoint"] : NULL;
+    $MaxDistance = isset($form["nearbySearch"]) ? $form["distance"] : NULL;
+    $LocalPickupOnly = isset($form["shipping1"]) ? "true" : NULL;
+    $FreeShippingOnly = isset($form["shipping2"]) ? "true" : NULL;
+    $Condition = NULL;
+    if (isset($_POST["condition1"])) {
+        $Condition[] = $form["condition1"];
     }
+    if (isset($_POST["condition2"])) {
+        $Condition[] = $form["condition2"];
+    }
+    if (isset($_POST["condition3"])) {
+        $Condition[] = $form["condition3"];
+    }
+    $searchURL = "https://svcs.ebay.com/services/search/FindingService/v1?";
+    $searchURL = $searchURL . "OPERATION-NAME=" . $OPERATION_NAME;
+    $searchURL = $searchURL . "&SERVICE-VERSION=" . $SERVICE_VERSION;
+    $searchURL = $searchURL . "&SECURITY-APPNAME=" . $SECURITY_APPNAME;
+    $searchURL = $searchURL . "&RESPONSE-DATA-FORMAT=" . $RESPONSE_DATA_FORMAT;
+    $searchURL = $searchURL . "&REST-PAYLOAD";
+    $searchURL = $searchURL . "&paginationInput.entriesPerPage=" . $paginationInput_entriesPerPage;
+    $searchURL = $searchURL . "&keywords=" . rawurlencode($keywords);
+    if (isset($categoryId)) {
+        $searchURL = $searchURL . "&categoryId=" . $categoryId;
+    }
+    if (isset($buyerPostalCode)) {
+        $searchURL = $searchURL . "&buyerPostalCode=" . $buyerPostalCode;
+    }
+    $filterCount = 0;
+    if (isset($MaxDistance)) {
+        $searchURL = $searchURL . "&itemFilter($filterCount).name=Maxdistance";
+        $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $MaxDistance;
+        $filterCount++;
+    }
+    if (isset($FreeShippingOnly)) {
+        $searchURL = $searchURL . "&itemFilter($filterCount).name=FreeShippingOnly";
+        $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $FreeShippingOnly;
+        $filterCount++;
+    }
+    if (isset($LocalPickupOnly)) {
+        $searchURL = $searchURL . "&itemFilter($filterCount).name=LocalPickupOnly";
+        $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $LocalPickupOnly;
+        $filterCount++;
+    }
+    $searchURL = $searchURL . "&itemFilter($filterCount).name=HideDuplicateItem";
+    $searchURL = $searchURL . "&itemFilter($filterCount).value=true";
+    $filterCount++;
+    if (!is_null($Condition)) {
+        $searchURL = $searchURL . "&itemFilter($filterCount).name=Condition";
+        for ($i = 0; $i < count($Condition); $i++) {
+            $searchURL = $searchURL . "&itemFilter($filterCount).value($i)=" . $Condition[$i];
+        }
+        $filterCount++;
+    }
+    $searchText = file_get_contents($searchURL);
+    global $searchObj;
+    $searchObj = json_decode($searchText);
+
+    echo $searchURL;
+    //echo $requestText;
+    //var_dump($requestObj);
 }
-function processFinding() {
-    global $requestObj;
-    $searchResult = $requestObj->{'findItemsAdvancedResponse'}[0]->{'searchResult'}[0];
+
+function searchProcess()
+{
+    global $searchObj;
+    $searchResult = $searchObj->{'findItemsAdvancedResponse'}[0]->{'searchResult'}[0];
     $itemCount = $searchResult->{'@count'};
     $item = array();
     for ($i = 0; $i < $itemCount; $i++) {
         $itemTemp = $searchResult->{'item'}[$i];
-        $item[$i]["Index"] = $i;
-        $item[$i]["Photo"] = $itemTemp->{'galleryURL'}[0];
-        $item[$i]["Name"] = $itemTemp->{'title'}[0];
-        $item[$i]["Price"]["Currency"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'};
-        $item[$i]["Price"]["Value"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'};
+        $item[$i]["Index"] = $i + 1;
+        $item[$i]["Photo"] = isset($itemTemp->{'galleryURL'}[0]) ? $itemTemp->{'galleryURL'}[0] : 'N/A';
+        $item[$i]["Name"] = isset($itemTemp->{'title'}[0]) ? $itemTemp->{'title'}[0] : 'N/A' ;
+        $item[$i]["Price"]["Currency"] = isset($itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'}) ? $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'} : 'N/A';
+        $item[$i]["Price"]["Value"] = isset($itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'}) ? $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'} : 'N/A';
         //$item[$i]["Price"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'} . $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'};
         $item[$i]["Zip"] = isset($itemTemp->{'postalCode'}[0]) ? $itemTemp->{'postalCode'}[0] : 'N/A';
         $item[$i]["Condition"] = isset($itemTemp->{'condition'}[0]) ? $itemTemp->{'condition'}[0]->{'conditionDisplayName'}[0] : 'N/A';
@@ -244,6 +241,7 @@ function processFinding() {
         } else {
             $item[$i]["Shipping"] = 'N/A';
         }
+        $item[$i]["ItemId"] = $itemTemp->{'itemId'}[0];
     }
     global $itemJSON;
     $itemJSON['Title'] = 'fingdingResult';
@@ -252,12 +250,69 @@ function processFinding() {
     $itemJSON = json_encode($itemJSON);
     //var_dump($itemJSON);
 }
-if (isset($_POST["keyword"])) {
-    requestFinding();
-    processFinding();
+
+function detailRequest($itemId)
+{
+    $callName = 'GetSingleItem';
+    $responseencoding = 'JSON';
+    $appid = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
+    $siteid = '0';
+    $version = '967';
+    $IncludeSelector = 'Description,Details,ItemSpecifics';
+
+    $detailURL = 'http://open.api.ebay.com/shopping?';
+    $detailURL = $detailURL . 'callname=' . $callName;
+    $detailURL = $detailURL . '&responseencoding=' . $responseencoding;
+    $detailURL = $detailURL . '&appid=' . $appid;
+    $detailURL = $detailURL . '&siteid=' . $siteid;
+    $detailURL = $detailURL . '&version=' . $version;
+    $detailURL = $detailURL . '&ItemID=' . $itemId;
+    $detailURL = $detailURL . '&IncludeSelector=' . $IncludeSelector;
+    echo $detailURL;
+    $detailText = file_get_contents($detailURL);
+    global $detailObj;
+    $detailObj = json_decode($detailText);
 }
-/*$test = "test";
-echo ($test);*/
+
+function detailProcess() {
+    global $detailObj;
+    $detailJSON = null;
+    if ($detailObj->{'Ack'} == 'Failure'){
+        $detailJSON['Row'] = array();
+        $detailJSON['Description'] = '';
+    }
+    if ($detailObj->{'Ack'} == 'Success') {
+        //$detailJSON['Description'] = $detailObj->{'Item'}->{'Description'};
+        $detailJSON['Row']['Photo'] = isset($detailObj->{'Item'}->{'PictureURL'}[0]) ? $detailObj->{'Item'}->{'PictureURL'}[0] : 'N/A';
+        $detailJSON['Row']['Title'] = isset($detailObj->{'Item'}->{'Title'}) ? $detailObj->{'Item'}->{'Title'} : 'N/A';
+        $detailJSON['Row']['Subtitle'] = isset($detailObj->{'Item'}->{'Subtitle'}) ? $detailObj->{'Item'}->{'Subtitle'} : 'N/A';
+        $detailJSON['Row']['Price']['Currency'] = isset($detailObj->{'Item'}->{'CurrentPrice'}->{'CurrencyID'}) ? $detailObj->{'Item'}->{'CurrentPrice'}->{'CurrencyID'} : 'N/A';
+        $detailJSON['Row']['Price']['Value'] = isset($detailObj->{'Item'}->{'CurrentPrice'}->{'Value'}) ? $detailObj->{'Item'}->{'CurrentPrice'}->{'Value'} : 'N/A';
+        $detailJSON['Row']['Location'] = isset($detailObj->{'Item'}->{'Location'}) ? $detailObj->{'Item'}->{'Location'} : 'N/A';
+        $detailJSON['Row']['PostalCode'] = isset($detailObj->{'Item'}->{'PostalCode'}) ? $detailObj->{'Item'}->{'PostalCode'} : 'N/A';
+        $detailJSON['Row']['Seller'] = isset($detailObj->{'Item'}->{'Seller'}->{'UserID'}) ? $detailObj->{'Item'}->{'Seller'}->{'UserID'} : 'N/A';
+        $detailJSON['Row']['ReturnPolicy']['ReturnsAccepted'] = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'} : 'N/A';
+        $detailJSON['Row']['ReturnPolicy']['ReturnsWithin'] = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
+        $detailJSON['Row']['ItemSpecifics'] = isset($detailObj->{'Item'}->{'ItemSpecifics'}) ? $detailObj->{'Item'}->{'ItemSpecifics'} : array();
+    }
+    $detailJSON = json_encode($detailJSON);
+    var_dump($detailJSON);
+
+}
+
+if (isset($_POST["keywords"])) {
+    $searchObj;
+    $itemJSON;
+    $form = $_POST;
+    searchRequest($form);
+    searchProcess();
+    //echo($itemJSON);
+}
+/*$itemId = '273189058712';
+$detailObj;
+detailRequest($itemId);
+//var_dump($detailObj);
+detailProcess();*/
 ?>
 
 <div class="mainbox">
@@ -265,9 +320,9 @@ echo ($test);*/
         <p class="title">Product Search</p>
     </div>
     <div class="divideLine"></div>
-    <form name="myform" method="POST" id="form" target="iframe" onsubmit="receiveJSON();event.preventDefault();event.stopPropagation()">
+    <form name="myform" method="POST" id="form" onsubmit="receiveJSON()">
         <b>Keyword</b>
-        <input class="keywordInput" type="text" name="keyword" maxlength="255" size="100" value="USC" required/>
+        <input class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="USC" required/>
         <br/>
         <b>Category</b>
         <select class="categoryInput" name="category">
@@ -307,6 +362,9 @@ echo ($test);*/
     </form>
 
 </div>
+<iframe id="foo" name="foo" style="display: none">
+
+</iframe>
 <div id="iframe" name="iframe">
 
 </div>
@@ -346,64 +404,76 @@ echo ($test);*/
             document.getElementById("zipInput").removeAttribute("disabled");
         }
     }
+
     function receiveJSON() {
-        jsonObj = <?php echo $itemJSON; ?>;
-        document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+        itemJSON = <?php echo $itemJSON;?>;
+        document.getElementById("iframe").innerHTML = generateSearchHTML(itemJSON);
     }
 
     function receiveJSON1() {
-        jsonObj = <?php echo $itemJSON; ?>;
-        document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
-        hWin = window.open("", "Assignment4", "height=600,width=1200");
-        jsonObj.onload = generateHTML(jsonObj);
-        hWin.document.write(html_text);
-        hWin.document.close();
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.overrideMimeType("application/json");
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                jsonObj = this.responseText;
+                document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+            }
+        }
+        xmlhttp.open("GET", "productSearch.php", false);
+        xmlhttp.send();
     }
 
-    function generateHTML(jsonObj) {
+    function drawDetail() {
+        jsonObj = <?php echo $itemJSON;?>;
+        document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+    }
+
+    function generateSearchHTML(jsonObj) {
         root = jsonObj.DocumentElement;
-        html_text = "<html><head><title>Highest-grossing Films</title></head><body style='font-family:Times New Roman'>";
-        html_text += "<table  >";
-        html_text += "<tbody>";
-        html_text += "<tr>";
+        search_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
+        search_text += "<table  >";
+        search_text += "<tbody>";
+        search_text += "<tr>";
         // output the headers
-        var tableHeader = jsonObj.Header;
-        for (i = 0; i < tableHeader.length; i++) {
-            html_text += "<th>" + tableHeader[i] + "</th>";
+        var searchHeader = jsonObj.Header;
+        for (i = 0; i < searchHeader.length; i++) {
+            search_text += "<th>" + searchHeader[i] + "</th>";
         }
-        html_text += "</tr>";
+        search_text += "</tr>";
         // output out the values
-        var items = jsonObj.Item;
-        for (i = 0; i < items.length; i++) //do for all films (one per row)
+        var search_items = jsonObj.Item;
+        for (i = 0; i < search_items.length; i++) //do for all films (one per row)
         {
-            itemNodeList = items[i]; //get properties of a film (an object)
-            html_text += "<tr>";      //start a new row of the output table
-            var item_keys = Object.keys(itemNodeList);
-            for (j = 0; j < item_keys.length; j++) {
-                prop = item_keys[j];
-                if (prop == 'Price') {
-                    html_text += "<td>"
-                    if (itemNodeList[prop].Currency == "USD") {
-                        html_text += '$';
+            search_item = search_items[i]; //get properties of a film (an object)
+            search_text += "<tr>";      //start a new row of the output table
+            search_item_keys = Object.keys(search_item);
+            for (j = 0; j < search_item_keys.length; j++) {
+                key = search_item_keys[j];
+                if (key == 'Price') {
+                    search_text += "<td>"
+                    if (search_item[key].Currency == "USD") {
+                        search_text += '$';
                     }
-                    html_text += itemNodeList[prop].Value + "</td>";
-                } else if (item_keys[j] == "Photo") {//handle images separately
-                    if (itemNodeList[prop] == "") {
-                        html_text += "<td>" + "</td>";
+                    search_text += search_item[key].Value + "</td>";
+                } else if (search_item_keys[j] == "Photo") {//handle images separately
+                    if (search_item[key] == "") {
+                        search_text += "<td>" + "</td>";
                     } else {
-                        html_text += "<td><img src='" + itemNodeList[prop] + "'></td>";
+                        search_text += "<td><img src='" + search_item[key] + "'></td>";
                     }
+                } else if (search_item_keys[j] == "ItemId") {
+                    continue;
                 } else {
-                    html_text += "<td>" + itemNodeList[prop] + "</td>";
+                    search_text += "<td>" + search_item[key] + "</td>";
                 }
 
             }
-            html_text += "</tr>";
+            search_text += "</tr>";
         }
-        html_text += "</tbody>";
-        html_text += "</table>";
-        html_text += "</body></html>";
-        return html_text;
+        search_text += "</tbody>";
+        search_text += "</table>";
+        search_text += "</body></html>";
+        return search_text;
     }
 </script>
 
