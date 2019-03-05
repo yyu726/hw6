@@ -98,15 +98,26 @@
             margin-left: 250px;
         }
 
-        #iframe {
+        #contentBox {
             margin: auto;
+            margin-top:100px;
+            width: 800px;
+
+        }
+
+        #iframeSeller {
+            margin-left: 200px;
             width: 1400px;
+            height : auto;
             outline: dotted;
         }
 
-
-        table {
+        #searchTable {
             width: 1400px;
+            border-collapse: collapse;
+        }
+
+        #detailTable {
             border-collapse: collapse;
         }
 
@@ -121,7 +132,7 @@
     </style>
 </head>
 
-<body onload="getLocation();receiveJSON()">
+<body onload="getLocation();drawDetail()">
 <script>
     function getLocation() {
         var s = document.createElement("script");
@@ -210,7 +221,7 @@ function searchRequest($form)
     global $searchObj;
     $searchObj = json_decode($searchText);
 
-    echo $searchURL;
+    //echo $searchURL;
     //echo $requestText;
     //var_dump($requestObj);
 }
@@ -268,36 +279,98 @@ function detailRequest($itemId)
     $detailURL = $detailURL . '&version=' . $version;
     $detailURL = $detailURL . '&ItemID=' . $itemId;
     $detailURL = $detailURL . '&IncludeSelector=' . $IncludeSelector;
-    echo $detailURL;
+    //echo $detailURL;
     $detailText = file_get_contents($detailURL);
+    //var_dump($detailText);
     global $detailObj;
     $detailObj = json_decode($detailText);
 }
 
+
+
 function detailProcess() {
     global $detailObj;
-    $detailJSON = null;
+    $detail = null;
     if ($detailObj->{'Ack'} == 'Failure'){
-        $detailJSON['Row'] = array();
-        $detailJSON['Description'] = '';
+        $detail = array();
+        $seller = '';
     }
     if ($detailObj->{'Ack'} == 'Success') {
-        //$detailJSON['Description'] = $detailObj->{'Item'}->{'Description'};
-        $detailJSON['Row']['Photo'] = isset($detailObj->{'Item'}->{'PictureURL'}[0]) ? $detailObj->{'Item'}->{'PictureURL'}[0] : 'N/A';
-        $detailJSON['Row']['Title'] = isset($detailObj->{'Item'}->{'Title'}) ? $detailObj->{'Item'}->{'Title'} : 'N/A';
-        $detailJSON['Row']['Subtitle'] = isset($detailObj->{'Item'}->{'Subtitle'}) ? $detailObj->{'Item'}->{'Subtitle'} : 'N/A';
-        $detailJSON['Row']['Price']['Currency'] = isset($detailObj->{'Item'}->{'CurrentPrice'}->{'CurrencyID'}) ? $detailObj->{'Item'}->{'CurrentPrice'}->{'CurrencyID'} : 'N/A';
-        $detailJSON['Row']['Price']['Value'] = isset($detailObj->{'Item'}->{'CurrentPrice'}->{'Value'}) ? $detailObj->{'Item'}->{'CurrentPrice'}->{'Value'} : 'N/A';
-        $detailJSON['Row']['Location'] = isset($detailObj->{'Item'}->{'Location'}) ? $detailObj->{'Item'}->{'Location'} : 'N/A';
-        $detailJSON['Row']['PostalCode'] = isset($detailObj->{'Item'}->{'PostalCode'}) ? $detailObj->{'Item'}->{'PostalCode'} : 'N/A';
-        $detailJSON['Row']['Seller'] = isset($detailObj->{'Item'}->{'Seller'}->{'UserID'}) ? $detailObj->{'Item'}->{'Seller'}->{'UserID'} : 'N/A';
-        $detailJSON['Row']['ReturnPolicy']['ReturnsAccepted'] = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'} : 'N/A';
-        $detailJSON['Row']['ReturnPolicy']['ReturnsWithin'] = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
-        $detailJSON['Row']['ItemSpecifics'] = isset($detailObj->{'Item'}->{'ItemSpecifics'}) ? $detailObj->{'Item'}->{'ItemSpecifics'} : array();
+        $seller['Description'] = $detailObj->{'Item'}->{'Description'};
+        $detail[0]['Photo'] = isset($detailObj->{'Item'}->{'PictureURL'}[0]) ? $detailObj->{'Item'}->{'PictureURL'}[0] : 'N/A';
+        $detail[0]['Title'] = isset($detailObj->{'Item'}->{'Title'}) ? $detailObj->{'Item'}->{'Title'} : 'N/A';
+        $detail[0]['Subtitle'] = isset($detailObj->{'Item'}->{'Subtitle'}) ? $detailObj->{'Item'}->{'Subtitle'} : 'N/A';
+        $detail_currency = isset($detailObj->{'Item'}->{'CurrentPrice'}->{'CurrencyID'}) ? $detailObj->{'Item'}->{'CurrentPrice'}->{'CurrencyID'} : 'N/A';
+        $detail_value = isset($detailObj->{'Item'}->{'CurrentPrice'}->{'Value'}) ? $detailObj->{'Item'}->{'CurrentPrice'}->{'Value'} : 'N/A';
+        if ($detail_currency == 'N/A' && $detail_value == 'N/A') {
+            $detail[0]['Price'] = 'N/A';
+        } else {
+            $detail[0]['Price'] = $detail_currency . $detail_value;
+        }
+        $detail[0]['Location'] = isset($detailObj->{'Item'}->{'Location'}) ? $detailObj->{'Item'}->{'Location'} : 'N/A';
+        $detail[0]['PostalCode'] = isset($detailObj->{'Item'}->{'PostalCode'}) ? $detailObj->{'Item'}->{'PostalCode'} : 'N/A';
+        $detail[0]['Seller'] = isset($detailObj->{'Item'}->{'Seller'}->{'UserID'}) ? $detailObj->{'Item'}->{'Seller'}->{'UserID'} : 'N/A';
+        $detail_returnaccpted = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'} : 'N/A';
+        $detail_returnwithin = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
+        if ($detail_returnaccpted == 'N/A' && $detail_returnwithin == 'N/A') {
+            $detail[0]['ReturnPolicy'] = 'N/A';
+        } else {
+            $detail[0]['ReturnPolicy'] = $detail_returnaccpted . $detail_returnwithin;
+        }
+        $detail[0]['ItemSpecifics'] = isset($detailObj->{'Item'}->{'ItemSpecifics'}) ? $detailObj->{'Item'}->{'ItemSpecifics'} : array();
     }
-    $detailJSON = json_encode($detailJSON);
-    var_dump($detailJSON);
+    global $sellerJSON;
+    global $detailJSON;
+    $sellerJSON = json_encode($seller);
+    $detailJSON = json_encode($detail);
+    //var_dump($detailJSON);
 
+}
+
+function similarRequest($itemId) {
+    $OPERATION_NAME = 'getSimilarItems';
+    $SERVICE_NAME = 'MerchandisingService';
+    $SERVICE_VERSION = '1.1.0';
+    $CONSUMER_ID = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
+    $RESPONSE_DATA_FORMAT = 'JSON';
+    $maxResults = 8;
+    $similarURL = 'http://svcs.ebay.com/MerchandisingService?';
+    $similarURL = $similarURL . 'OPERATION-NAME=' . $OPERATION_NAME;
+    $similarURL = $similarURL . '&SERVICE-NAME=' . $SERVICE_NAME;
+    $similarURL = $similarURL . '&SERVICE-VERSION=' . $SERVICE_VERSION;
+    $similarURL = $similarURL . '&CONSUMER-ID=' . $CONSUMER_ID;
+    $similarURL = $similarURL . '&RESPONSE-DATA-FORMAT=' . $RESPONSE_DATA_FORMAT;
+    $similarURL = $similarURL . '&REST-PAYLOAD' ;
+    $similarURL = $similarURL . '&itemId=' . $itemId;
+    $similarURL = $similarURL . '&maxResults=' . $maxResults;
+    //echo $similarURL;
+    $similarText = file_get_contents($similarURL);
+    //var_dump($similarText);
+    global $similarObj;
+    $similarObj = json_decode($similarText);
+}
+
+function similarProcess() {
+    global $similarObj;
+
+    $similar = null;
+    if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Failure'){
+        $similar = array();
+    }
+    if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Success') {
+        $similar = array();
+
+        $similarItem = $similarObj->{'getSimilarItemsResponse'}->{'itemRecommendations'}->{'item'};
+        for ($i = 0; $i < count($similarItem); $i++) {
+            $similar[$i]['ItemID'] = isset($similarItem[$i]->{'itemId'}) ? $similarItem[$i]->{'itemId'} : 'N/A';
+            $similar[$i]['Title'] = isset($similarItem[$i]->{'title'}) ? $similarItem[$i]->{'title'} : 'N/A';
+            $similar[$i]['Photo'] = isset($similarItem[$i]->{'viewItemURL'}) ? $similarItem[$i]->{'viewItemURL'} : 'N/A';
+            $similar[$i]['Price'] = isset($similarItem[$i]->{'buyItNowPrice'}->{'__value__'}) ? 'USD' . $similarItem[$i]->{'buyItNowPrice'}->{'__value__'} : 'N/A';
+        }
+        global $similarJSON;
+        $similarJSON = json_encode($similar);
+        var_dump($similarJSON);
+    }
 }
 
 if (isset($_POST["keywords"])) {
@@ -308,11 +381,18 @@ if (isset($_POST["keywords"])) {
     searchProcess();
     //echo($itemJSON);
 }
-/*$itemId = '273189058712';
-$detailObj;
+
+$itemId = '371755393228';
+$detailObj = 'null';
+$detailJSON = 'null';
+$sellerJSON = 'null';
+$similarObj = 'null';
+$similarJSON = 'null';
 detailRequest($itemId);
 //var_dump($detailObj);
-detailProcess();*/
+detailProcess();
+similarRequest($itemId);
+similarProcess();
 ?>
 
 <div class="mainbox">
@@ -320,7 +400,7 @@ detailProcess();*/
         <p class="title">Product Search</p>
     </div>
     <div class="divideLine"></div>
-    <form name="myform" method="POST" id="form" onsubmit="receiveJSON()">
+    <form name="myform" method="POST" id="form" >
         <b>Keyword</b>
         <input class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="USC" required/>
         <br/>
@@ -362,12 +442,13 @@ detailProcess();*/
     </form>
 
 </div>
-<iframe id="foo" name="foo" style="display: none">
-
-</iframe>
-<div id="iframe" name="iframe">
+<div id="contentBox" name="contentBox">
 
 </div>
+<iframe id="iframeSeller" name="iframeSeller" >
+
+</iframe>
+
 
 
 <script type="text/javascript">
@@ -405,9 +486,9 @@ detailProcess();*/
         }
     }
 
-    function receiveJSON() {
+    function drawSearch() {
         itemJSON = <?php echo $itemJSON;?>;
-        document.getElementById("iframe").innerHTML = generateSearchHTML(itemJSON);
+        document.getElementById("contentBox").innerHTML = generateSearchHTML(itemJSON);
     }
 
     function receiveJSON1() {
@@ -416,7 +497,7 @@ detailProcess();*/
         xmlhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 jsonObj = this.responseText;
-                document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+                document.getElementById("contentBox").innerHTML = generateHTML(jsonObj);
             }
         }
         xmlhttp.open("GET", "productSearch.php", false);
@@ -424,14 +505,16 @@ detailProcess();*/
     }
 
     function drawDetail() {
-        jsonObj = <?php echo $itemJSON;?>;
-        document.getElementById("iframe").innerHTML = generateHTML(jsonObj);
+        detailJSON = <?php echo $detailJSON;?>;
+        sellerJSON = <?php echo $sellerJSON;?>.Description;
+        document.getElementById("iframeSeller").srcdoc = sellerJSON;
+        document.getElementById("contentBox").innerHTML = generateDetailHTML(detailJSON);
     }
 
     function generateSearchHTML(jsonObj) {
         root = jsonObj.DocumentElement;
         search_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
-        search_text += "<table  >";
+        search_text += "<table id='searchTable' >";
         search_text += "<tbody>";
         search_text += "<tr>";
         // output the headers
@@ -456,13 +539,14 @@ detailProcess();*/
                     }
                     search_text += search_item[key].Value + "</td>";
                 } else if (search_item_keys[j] == "Photo") {//handle images separately
-                    if (search_item[key] == "") {
+                    if (search_item[key] == "N/A") {
                         search_text += "<td>" + "</td>";
                     } else {
                         search_text += "<td><img src='" + search_item[key] + "'></td>";
                     }
                 } else if (search_item_keys[j] == "ItemId") {
-                    continue;
+                    //continue;
+                    search_text += "<td>" + search_item[key] + "</td>";
                 } else {
                     search_text += "<td>" + search_item[key] + "</td>";
                 }
@@ -474,6 +558,113 @@ detailProcess();*/
         search_text += "</table>";
         search_text += "</body></html>";
         return search_text;
+    }
+
+    function generateDetailHTML(jsonObj) {
+        root = jsonObj.DocumentElement;
+        detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
+        detail_text = "<H1 style='text-align:center;margin:auto'>Item Details</H1>";
+        detail_text += "<table id='detailTable'>";
+        detail_text += "<tbody>";
+        // output out the values
+        for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
+        {
+            detail = jsonObj[i]; //get properties of a film (an object)
+                 //start a new row of the output table
+            detail_keys = Object.keys(detail);
+            for (j = 0; j < detail_keys.length; j++) {
+                key = detail_keys[j];
+                if (key == 'ItemSpecifics') {
+                    for (k = 0; k < detail.ItemSpecifics.NameValueList.length; k++) {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + detail.ItemSpecifics.NameValueList[k].Name + "</b></td>";
+                        detail_text += "<td>" + detail.ItemSpecifics.NameValueList[k].Value + "</td>";
+                        detail_text += "</tr>";
+                    }
+                } else if (key == 'Photo') {
+                    if (detail[key] == "N/A") {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + key + "</b></td>";
+                        detail_text += "<td>" + "</td>";
+                        detail_text += "</tr>";
+                    } else {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + key + "</b></td>";
+                        detail_text += "<td><img src='" + detail[key] + "' style='width:200px'></td>";
+                        detail_text += "</tr>";
+                    }
+                } else {
+                    if (detail[key] != 'N/A') {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + key + "</b></td>";
+                        detail_text += "<td>" + detail[key] + "</td>";
+                        detail_text += "</tr>";
+                    }
+                }
+            }
+
+        }
+        detail_text += "</tbody>";
+        detail_text += "</table>";
+        detail_text += "</body></html>";
+        return detail_text;
+    }
+
+    function generateSimilarHTML(jsonObj) {
+        root = jsonObj.DocumentElement;
+        detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
+        detail_text += "<table id='similarTable'>";
+        detail_text += "<tbody>";
+        // output out the values
+        for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
+        {
+            detail = jsonObj[i]; //get properties of a film (an object)
+            //start a new row of the output table
+            detail_text += "<tr>";
+            if (detail['Photo'] == 'N/A') {
+
+            }
+            detail_text += "</tr>";
+
+
+
+            detail_keys = Object.keys(detail);
+            for (j = 0; j < detail_keys.length; j++) {
+                key = detail_keys[j];
+                if (key == 'ItemSpecifics') {
+                    for (k = 0; k < detail.ItemSpecifics.NameValueList.length; k++) {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + detail.ItemSpecifics.NameValueList[k].Name + "</b></td>";
+                        detail_text += "<td>" + detail.ItemSpecifics.NameValueList[k].Value + "</td>";
+                        detail_text += "</tr>";
+                    }
+                } else if (key == 'Photo') {
+                    if (detail[key] == "N/A") {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + key + "</b></td>";
+                        detail_text += "<td>" + "</td>";
+                        detail_text += "</tr>";
+                    } else {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + key + "</b></td>";
+                        detail_text += "<td><img src='" + detail[key] + "' style='width:200px'></td>";
+                        detail_text += "</tr>";
+                    }
+                } else {
+                    if (detail[key] != 'N/A') {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + key + "</b></td>";
+                        detail_text += "<td>" + detail[key] + "</td>";
+                        detail_text += "</tr>";
+                    }
+                }
+            }
+
+        }
+        detail_text += "</tbody>";
+        detail_text += "</table>";
+        detail_text += "</body></html>";
+        return detail_text;
     }
 </script>
 
