@@ -13,14 +13,19 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="900">
-              <caret line="456" column="68" lean-forward="true" selection-start-line="456" selection-start-column="68" selection-end-line="456" selection-end-column="68" />
+            <state relative-caret-position="104">
+              <caret line="624" lean-forward="true" selection-start-line="624" selection-end-line="624" />
               <folding>
                 <element signature="n#searchRequest#0;n#!!top" />
-                <element signature="n#detailRequest#0;n#!!top" />
-                <element signature="n#detailProcess#0;n#!!top" />
-                <element signature="n#style#0;n#iframe#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#searchProcess#0;n#!!top" />
+                <element signature="e#21722#23799#0#HTML" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#23842#26157#0#HTML" />
+                <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -34,6 +39,11 @@
       <find>global</find>
       <find>var_dump</find>
       <find>generateHTML</find>
+      <find>display</find>
+      <find>foo</find>
+      <find>iframe</find>
+      <find>echo</find>
+      <find>dump</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -48,8 +58,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="php_installation_&lt;7.3.1&gt;" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="201" />
-    <option name="y" value="53" />
+    <option name="x" value="200" />
+    <option name="y" value="52" />
     <option name="width" value="1255" />
     <option name="height" value="980" />
   </component>
@@ -112,15 +122,15 @@
       <workItem from="1551673694826" duration="3475000" />
       <workItem from="1551677335476" duration="9941000" />
       <workItem from="1551721892523" duration="15698000" />
+      <workItem from="1551762356088" duration="12946000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55274000" />
+    <option name="totallyTimeSpent" value="68220000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.39429176" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -170,16 +180,28 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/resources/html5-schema/html5/web-forms.rnc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" column="45" lean-forward="true" selection-start-line="20" selection-start-column="45" selection-end-line="20" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="456" column="68" lean-forward="true" selection-start-line="456" selection-start-column="68" selection-end-line="456" selection-end-column="68" />
+        <state relative-caret-position="104">
+          <caret line="624" lean-forward="true" selection-start-line="624" selection-end-line="624" />
           <folding>
             <element signature="n#searchRequest#0;n#!!top" />
-            <element signature="n#detailRequest#0;n#!!top" />
-            <element signature="n#detailProcess#0;n#!!top" />
-            <element signature="n#style#0;n#iframe#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#searchProcess#0;n#!!top" />
+            <element signature="e#21722#23799#0#HTML" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#23842#26157#0#HTML" />
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
