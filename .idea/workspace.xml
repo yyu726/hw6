@@ -13,12 +13,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3262">
-              <caret line="570" column="64" selection-start-line="570" selection-start-column="64" selection-end-line="570" selection-end-column="64" />
+            <state relative-caret-position="193">
+              <caret line="477" column="34" lean-forward="true" selection-start-line="477" selection-start-column="34" selection-end-line="477" selection-end-column="34" />
               <folding>
                 <element signature="n#detailRequest#0;n#!!top" />
                 <element signature="n#detailProcess#0;n#!!top" />
                 <element signature="n#similarRequest#0;n#!!top" />
+                <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
@@ -54,6 +55,12 @@
       <find>shipping1</find>
       <find>condition1</find>
       <find>milesinput</find>
+      <find>onclick</find>
+      <find>ItemId</find>
+      <find>$_POST[&quot;itemId&quot;]</find>
+      <find>&quot;itemId&quot;</find>
+      <find>clickdetail</find>
+      <find>refrence</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -136,14 +143,16 @@
       <workItem from="1551825089711" duration="19000" />
       <workItem from="1551825596194" duration="16311000" />
       <workItem from="1551852520994" duration="2731000" />
+      <workItem from="1551900968870" duration="6438000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="87281000" />
+    <option name="totallyTimeSpent" value="93719000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.39429176" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -202,12 +211,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3262">
-          <caret line="570" column="64" selection-start-line="570" selection-start-column="64" selection-end-line="570" selection-end-column="64" />
+        <state relative-caret-position="193">
+          <caret line="477" column="34" lean-forward="true" selection-start-line="477" selection-start-column="34" selection-end-line="477" selection-end-column="34" />
           <folding>
             <element signature="n#detailRequest#0;n#!!top" />
             <element signature="n#detailProcess#0;n#!!top" />
             <element signature="n#similarRequest#0;n#!!top" />
+            <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
