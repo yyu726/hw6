@@ -97,19 +97,46 @@
         input[type=submit] {
             margin-left: 250px;
         }
-
-        #contentBox {
+        #divSearch {
+            margin:auto;
+            width:1400px;
+            margin-top:100px;
+        }
+        #divDetail {
             margin: auto;
             margin-top:100px;
             width: 800px;
-
+        }
+        #sellerButton {
+            width:300px;
+            height:300px;
+            background-color:blue;
+            margin:auto;
+        }
+        #divSeller{
+            margin:auto;
+            width:1600px;
+        }
+        #iframeSeller {
+            width:1600px;
+            height : 3000px;
+            outline: dotted;
+            overflow-x: hidden;
+        }
+        #similarButton {
+            width:300px;
+            height:300px;
+            background-color:red;
+            margin:auto;
         }
 
-        #iframeSeller {
-            margin-left: 200px;
-            width: 1400px;
-            height : auto;
-            outline: dotted;
+        #divSimilar {
+            margin:auto;
+            margin: auto;
+            margin-top:100px;
+            width: 1000px;
+            overflow:auto;
+            border: 2px solid rgb(200, 200, 200);
         }
 
         #searchTable {
@@ -126,18 +153,27 @@
             font-size: 20px;
         }
 
+        #divSimilar td {
+            border:none;
+            padding-left:20px;
+            padding-right:20px;
+        }
+        #similarTable {
+            border:none;
+        }
         img {
             width: 100px;
         }
     </style>
 </head>
 
-<body onload="getLocation();drawDetail()">
+<body onload="getLocation();loadPage()">
 <script>
     function getLocation() {
         var s = document.createElement("script");
         s.src = "http://ip-api.com/json/?callback=setLocation";
         document.body.appendChild(s);
+        setLocation(s);
     }
 
     var zip;
@@ -152,8 +188,9 @@
 
 <?php
 /**/
-function searchRequest($form)
+function searchRequest()
 {
+    global $form;
     $OPERATION_NAME = 'findItemsAdvanced';
     $SERVICE_VERSION = '1.0.0';
     $SECURITY_APPNAME = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
@@ -163,18 +200,26 @@ function searchRequest($form)
     $categoryArray = array('All' => NULL, 'Art' => '550', 'Baby' => '2984', 'Books' => '267', 'CSA' => '11450',
         'CTN' => '58058', 'HB' => '26395', 'Music' => '11233', 'VGC' => '1249');
     $categoryId = $categoryArray[$form["category"]];
-    $buyerPostalCode = isset($form["nearbySearch"]) ? $form["centerpoint"] : NULL;
+    $buyerPostalCode = null;
+    if (isset($form["nearbySearch"])) {
+        if (isset($form["hereRadio"])) {
+            $buyerPostalCode = $form["hereRadio"];
+        }
+        if (isset($form["zipInput"])) {
+            $buyerPostalCode = $form["zipInput"];
+        }
+    }
     $MaxDistance = isset($form["nearbySearch"]) ? $form["distance"] : NULL;
     $LocalPickupOnly = isset($form["shipping1"]) ? "true" : NULL;
     $FreeShippingOnly = isset($form["shipping2"]) ? "true" : NULL;
     $Condition = NULL;
-    if (isset($_POST["condition1"])) {
+    if (isset($_form["condition1"])) {
         $Condition[] = $form["condition1"];
     }
-    if (isset($_POST["condition2"])) {
+    if (isset($_form["condition2"])) {
         $Condition[] = $form["condition2"];
     }
-    if (isset($_POST["condition3"])) {
+    if (isset($_form["condition3"])) {
         $Condition[] = $form["condition3"];
     }
     $searchURL = "https://svcs.ebay.com/services/search/FindingService/v1?";
@@ -193,7 +238,7 @@ function searchRequest($form)
     }
     $filterCount = 0;
     if (isset($MaxDistance)) {
-        $searchURL = $searchURL . "&itemFilter($filterCount).name=Maxdistance";
+        $searchURL = $searchURL . "&itemFilter($filterCount).name=MaxDistance";
         $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $MaxDistance;
         $filterCount++;
     }
@@ -221,9 +266,9 @@ function searchRequest($form)
     global $searchObj;
     $searchObj = json_decode($searchText);
 
-    //echo $searchURL;
-    //echo $requestText;
-    //var_dump($requestObj);
+    echo $searchURL;
+    //echo $searchText;
+    //var_dump($searchObj);
 }
 
 function searchProcess()
@@ -255,6 +300,7 @@ function searchProcess()
         $item[$i]["ItemId"] = $itemTemp->{'itemId'}[0];
     }
     global $itemJSON;
+    $itemJSON = null;
     $itemJSON['Title'] = 'fingdingResult';
     $itemJSON['Header'] = array('Index', 'Photo', 'Name', 'Price', 'Zip code', 'Condition', 'Shipping Option');
     $itemJSON['Item'] = $item;
@@ -286,8 +332,6 @@ function detailRequest($itemId)
     $detailObj = json_decode($detailText);
 }
 
-
-
 function detailProcess() {
     global $detailObj;
     $detail = null;
@@ -311,7 +355,7 @@ function detailProcess() {
         $detail[0]['PostalCode'] = isset($detailObj->{'Item'}->{'PostalCode'}) ? $detailObj->{'Item'}->{'PostalCode'} : 'N/A';
         $detail[0]['Seller'] = isset($detailObj->{'Item'}->{'Seller'}->{'UserID'}) ? $detailObj->{'Item'}->{'Seller'}->{'UserID'} : 'N/A';
         $detail_returnaccpted = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'} : 'N/A';
-        $detail_returnwithin = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
+        $detail_returnwithin = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? ' Within ' . $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
         if ($detail_returnaccpted == 'N/A' && $detail_returnwithin == 'N/A') {
             $detail[0]['ReturnPolicy'] = 'N/A';
         } else {
@@ -324,6 +368,7 @@ function detailProcess() {
     $sellerJSON = json_encode($seller);
     $detailJSON = json_encode($detail);
     //var_dump($detailJSON);
+
 
 }
 
@@ -364,25 +409,39 @@ function similarProcess() {
         for ($i = 0; $i < count($similarItem); $i++) {
             $similar[$i]['ItemID'] = isset($similarItem[$i]->{'itemId'}) ? $similarItem[$i]->{'itemId'} : 'N/A';
             $similar[$i]['Title'] = isset($similarItem[$i]->{'title'}) ? $similarItem[$i]->{'title'} : 'N/A';
-            $similar[$i]['Photo'] = isset($similarItem[$i]->{'viewItemURL'}) ? $similarItem[$i]->{'viewItemURL'} : 'N/A';
+            $similar[$i]['Photo'] = isset($similarItem[$i]->{'imageURL'}) ? $similarItem[$i]->{'imageURL'} : 'N/A';
             $similar[$i]['Price'] = isset($similarItem[$i]->{'buyItNowPrice'}->{'__value__'}) ? 'USD' . $similarItem[$i]->{'buyItNowPrice'}->{'__value__'} : 'N/A';
         }
         global $similarJSON;
         $similarJSON = json_encode($similar);
-        var_dump($similarJSON);
+        //var_dump($similarJSON);
     }
 }
 
+function initialForm() {
+    global $form;
+    $form["keywords"] = null;
+    $form["category"] = null;
+    $form["condition1"] = null;
+    $form["condition2"] = null;
+    $form["condition3"] = null;
+    $form["shipping1"] = null;
+    $form["shipping2"] = null;
+    $form["nearbySearch"] = null;
+    $form["zipInput"] = null;
+}
+$form;
+initialForm();
+
+$searchObj = 'null';
+$itemJSON = 'null';
 if (isset($_POST["keywords"])) {
-    $searchObj;
-    $itemJSON;
     $form = $_POST;
-    searchRequest($form);
+    searchRequest();
     searchProcess();
     //echo($itemJSON);
 }
-
-$itemId = '371755393228';
+$itemId = '233153942491';
 $detailObj = 'null';
 $detailJSON = 'null';
 $sellerJSON = 'null';
@@ -402,56 +461,108 @@ similarProcess();
     <div class="divideLine"></div>
     <form name="myform" method="POST" id="form" >
         <b>Keyword</b>
-        <input class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="USC" required/>
+        <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="default" required/>
         <br/>
         <b>Category</b>
         <select class="categoryInput" name="category">
-            <option value="All" selected>All Categories</option>
-            <option value="Art">Art</option>
-            <option value="Baby">Baby</option>
-            <option value="Books">Books</option>
-            <option value="CSA">Clothing, Shoes & Accessories</option>
-            <option value="CTN">Computer/Tablets & Networking</option>
-            <option value="HB">Health & Beauty</option>
-            <option value="Music">Music</option>
-            <option value="VGC">Video Games & Consoles</option>
+            <option id="All" value="All" selected=true>All Categories</option>
+            <option id="Art" value="Art" selected=false>Art</option>
+            <option id="Baby" value="Baby" selected=false>Baby</option>
+            <option id="Books" value="Books" selected=false>Books</option>
+            <option id="CSA" value="CSA" selected=false>Clothing, Shoes & Accessories</option>
+            <option id="CTN" value="CTN" selected=false>Computer/Tablets & Networking</option>
+            <option id="HB" value="HB" selected=false>Health & Beauty</option>
+            <option id="Music" value="Music" selected=false>Music</option>
+            <option id="VGC" value="VGC" selected="false">Video Games & Consoles</option>
         </select>
         <br/>
         <b>Condition</b>
-        <input class="checkbox" type="checkbox" name="condition1" value="New">New
-        <input class="checkbox" type="checkbox" name="condition2" value="Used">Used
-        <input class="checkbox" type="checkbox" name="condition3" value="Unspecified">Unspecified
+        <input id="condition1" class="checkbox" type="checkbox" name="condition1" value="New">New
+        <input id="condition2" class="checkbox" type="checkbox" name="condition2" value="Used">Used
+        <input id="condition3" class="checkbox" type="checkbox" name="condition3" value="Unspecified">Unspecified
         <br/>
         <b>Shipping Options</b>
-        <input class="shipping" type="checkbox" name="shipping1" value="LocalPickup">Local Pickup
-        <input class="shipping" type="checkbox" name="shipping2" value="FreeShipping">Free Shipping
+        <input id="shipping1" class="shipping" type="checkbox" name="shipping1" value="LocalPickup">Local Pickup
+        <input id="shipping2" class="shipping" type="checkbox" name="shipping2" value="FreeShipping">Free Shipping
         <br/>
-        <input class="nearbySearch" type="checkbox" name="nearbySearch" value="enabled"
+        <input id="nearbySearch" class="nearbySearch" type="checkbox" name="nearbySearch" value="enabled"
                onchange="enableSearch(this)"><b>Enable Nearby Search</b>
         <input id="milesInput" type="text" name="distance" maxlength="255" size="100" placeholder="10" value="10"
                disabled>
         <b id="milesLabel">miles from</b>
-        <input id="hereRadio" type="radio" name="centerpoint" value="Here" checked disabled onchange="disableZip(this)">
+        <input id="hereRadio" type="radio" name="hereRadio" value="Here" checked disabled onclick="clickHere()">
         <id id="hereLabel">Here</id>
         <br>
-        <input id="zipRadio" type="radio" name="centerpoint" value="Zipcode" onchange="enableZip(this)" disabled>
-        <input type="text" name="zipcode" id="zipInput" maxlength="5" placeholder="zipcode" disabled required>
+        <input id="zipRadio" type="radio" name="zipRadio" value="" onclick="clickZip()" disabled>
+        <input id="zipInput" type="text" name="zipInput" maxlength="5" placeholder="zipcode" disabled required>
         <br/>
         <input id="submitButton" type="submit" value="Search" disabled>
         <input type="reset" value="Clear">
     </form>
 
 </div>
-<div id="contentBox" name="contentBox">
-
+<div id="divSearch" name="divSearch"></div>
+<div id="divDetail" name="divDetail"></div>
+<div id="sellerButton" name="sellerButton">
+    <p></p>
+    <img>
 </div>
-<iframe id="iframeSeller" name="iframeSeller" >
+<div id="divSeller" name="divSeller">
+    <iframe id="iframeSeller" name="iframeSeller" ></iframe>
+</div>
 
-</iframe>
+<div id="similarButton" name="similarButton"></div>
+<div id="divSimilar" name="divSimilar"></div>
 
 
 
 <script type="text/javascript">
+    function loadForm () {
+        document.getElementById("keywordInput").value="USC";
+
+        document.getElementById("All").selected=false;
+        document.getElementById("Art").selected=false;
+        document.getElementById("Baby").selected=false;
+        document.getElementById("Books").selected=false;
+        document.getElementById("CSA").selected=false;
+        document.getElementById("CTN").selected=false;
+        document.getElementById("HB").selected=false;
+        document.getElementById("Music").selected=false;
+        document.getElementById("VGC").selected=false;
+
+        document.getElementById("Art").selected=true;
+        if (<?php if (isset($form["condition1"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("condition1").setAttribute("checked", "true");
+        }
+        if (<?php if (isset($form["condition2"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("condition2").setAttribute("checked", "true");
+        }
+        if (<?php if (isset($form["condition3"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("condition3").setAttribute("checked", "true");
+        }
+        if (<?php if (isset($form["shipping1"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("shipping1").setAttribute("checked", "true");
+        }
+        if (<?php if (isset($form["shipping2"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("shipping2").setAttribute("checked", "true");
+        }
+        if (<?php if (isset($form["nearbySearch"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("nearbySearch").setAttribute("checked", "true");
+            enableSearch(document.getElementById("nearbySearch"));
+        }
+        if (<?php if (isset($form["hereRadio"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("hereRadio").setAttribute("checked", "true");
+            document.getElementById("zipRadio").setAttribute("checked", "false");
+        }
+        if (<?php if (isset($form["zipRadio"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("zipRadio").setAttribute("checked", "true");
+            document.getElementById("hereRadio").setAttribute("checked", "false");
+        }
+
+     if (<?php if (isset($form["zipInput"])) {echo "true";} else {echo "false";} ?>) {
+           document.getElementById("zipInput").setAttribute("value", <?php echo $form["zipInput"]?>);
+       }
+    }
     function enableSearch(checkbox) {
         if (checkbox.checked == true) {
             document.getElementById("milesInput").removeAttribute("disabled");
@@ -474,42 +585,46 @@ similarProcess();
         }
     }
 
-    function disableZip(radio) {
-        if (radio.checked == true) {
+    function clickHere() {
             document.getElementById("zipInput").setAttribute("disabled", "disabled");
-        }
+            document.getElementById("hereRadio").setAttribute("checked", "true");
+            document.getElementById("zipRadio").checked = false;
     }
 
-    function enableZip(radio) {
-        if (radio.checked == true) {
+    function clickZip() {
             document.getElementById("zipInput").removeAttribute("disabled");
-        }
+            document.getElementById("zipRadio").setAttribute("checked", "true");
+            document.getElementById("hereRadio").checked = false;
+    }
+
+    function loadPage() {
+        loadForm();
+        drawSearch();
+        drawDetail();
     }
 
     function drawSearch() {
         itemJSON = <?php echo $itemJSON;?>;
-        document.getElementById("contentBox").innerHTML = generateSearchHTML(itemJSON);
+        if (itemJSON != null) {
+            document.getElementById("divSearch").innerHTML = generateSearchHTML(itemJSON);
+        }
     }
 
-    function receiveJSON1() {
-        xmlhttp = new XMLHttpRequest();
-        xmlhttp.overrideMimeType("application/json");
-        xmlhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                jsonObj = this.responseText;
-                document.getElementById("contentBox").innerHTML = generateHTML(jsonObj);
-            }
-        }
-        xmlhttp.open("GET", "productSearch.php", false);
-        xmlhttp.send();
-    }
 
     function drawDetail() {
         detailJSON = <?php echo $detailJSON;?>;
-        sellerJSON = <?php echo $sellerJSON;?>.Description;
-        document.getElementById("iframeSeller").srcdoc = sellerJSON;
-        document.getElementById("contentBox").innerHTML = generateDetailHTML(detailJSON);
+        if (detailJSON != null) {
+            detailJSON = <?php echo $detailJSON;?>;
+            sellerJSON = <?php echo $sellerJSON;?>.Description;
+            similarJSON = <?php echo $similarJSON;?>;
+            document.getElementById("iframeSeller").srcdoc = sellerJSON;
+            document.getElementById("divDetail").innerHTML = generateDetailHTML(detailJSON);
+            document.getElementById("divSimilar").innerHTML = generateSimilarHTML(similarJSON);
+        }
+
     }
+
+
 
     function generateSearchHTML(jsonObj) {
         root = jsonObj.DocumentElement;
@@ -593,6 +708,19 @@ similarProcess();
                         detail_text += "<td><img src='" + detail[key] + "' style='width:200px'></td>";
                         detail_text += "</tr>";
                     }
+                } else if (key == 'Location') {
+                    if (detail['Location'] != 'N/A' && detail['PostalCode'] != 'N/A') {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + "Location" + "</b></td>";
+                        detail_text += "<td>" + detail['Location'] +", " + detail['PostalCode'] + "</td>";
+                        detail_text += "</tr>";
+                    }
+                    if (detail['Location'] != 'N/A' && detail['PostalCode'] == 'N/A') {
+                        detail_text += "<tr>";
+                        detail_text += "<td><b>" + "Location" + "</b></td>";
+                        detail_text += "<td>" + detail['Location'] + "</td>";
+                        detail_text += "</tr>";
+                    }
                 } else {
                     if (detail[key] != 'N/A') {
                         detail_text += "<tr>";
@@ -602,7 +730,6 @@ similarProcess();
                     }
                 }
             }
-
         }
         detail_text += "</tbody>";
         detail_text += "</table>";
@@ -612,59 +739,41 @@ similarProcess();
 
     function generateSimilarHTML(jsonObj) {
         root = jsonObj.DocumentElement;
-        detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
-        detail_text += "<table id='similarTable'>";
-        detail_text += "<tbody>";
+        similar_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
+        similar_text += "<table id='similarTable'>";
+        similar_text += "<tbody>";
         // output out the values
+        similar_text += "<tr>";
         for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
         {
-            detail = jsonObj[i]; //get properties of a film (an object)
+            similar = jsonObj[i]; //get properties of a film (an object)
             //start a new row of the output table
-            detail_text += "<tr>";
-            if (detail['Photo'] == 'N/A') {
-
+            similar_text += "<td>";
+            if (similar['Photo'] != 'N/A') {
+                similar_text += "<img src='" + similar['Photo'] + "' style='width:200px'><br>";
             }
-            detail_text += "</tr>";
-
-
-
-            detail_keys = Object.keys(detail);
-            for (j = 0; j < detail_keys.length; j++) {
-                key = detail_keys[j];
-                if (key == 'ItemSpecifics') {
-                    for (k = 0; k < detail.ItemSpecifics.NameValueList.length; k++) {
-                        detail_text += "<tr>";
-                        detail_text += "<td><b>" + detail.ItemSpecifics.NameValueList[k].Name + "</b></td>";
-                        detail_text += "<td>" + detail.ItemSpecifics.NameValueList[k].Value + "</td>";
-                        detail_text += "</tr>";
-                    }
-                } else if (key == 'Photo') {
-                    if (detail[key] == "N/A") {
-                        detail_text += "<tr>";
-                        detail_text += "<td><b>" + key + "</b></td>";
-                        detail_text += "<td>" + "</td>";
-                        detail_text += "</tr>";
-                    } else {
-                        detail_text += "<tr>";
-                        detail_text += "<td><b>" + key + "</b></td>";
-                        detail_text += "<td><img src='" + detail[key] + "' style='width:200px'></td>";
-                        detail_text += "</tr>";
-                    }
-                } else {
-                    if (detail[key] != 'N/A') {
-                        detail_text += "<tr>";
-                        detail_text += "<td><b>" + key + "</b></td>";
-                        detail_text += "<td>" + detail[key] + "</td>";
-                        detail_text += "</tr>";
-                    }
-                }
+            if (similar['Title'] != 'N/A') {
+                similar_text += similar['Title'];
             }
+            similar_text += "</td>";
 
         }
-        detail_text += "</tbody>";
-        detail_text += "</table>";
-        detail_text += "</body></html>";
-        return detail_text;
+        similar_text += "</tr>";
+        similar_text += "<tr>";
+        for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
+        {
+            similar = jsonObj[i]; //get properties of a film (an object)
+            //start a new row of the output table
+            similar_text += "<td>";
+            similar_text += similar['Price'];
+            similar_text += "</td>";
+
+        }
+        similar_text += "</tr>";
+        similar_text += "</tbody>";
+        similar_text += "</table>";
+        similar_text += "</body></html>";
+        return similar_text;
     }
 </script>
 
