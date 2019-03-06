@@ -212,14 +212,14 @@ function searchRequest()
     $MaxDistance = isset($form["nearbySearch"]) ? $form["distance"] : NULL;
     $LocalPickupOnly = isset($form["shipping1"]) ? "true" : NULL;
     $FreeShippingOnly = isset($form["shipping2"]) ? "true" : NULL;
-    $Condition = NULL;
-    if (isset($_form["condition1"])) {
+    $Condition = null;
+    if (isset($form["condition1"])) {
         $Condition[] = $form["condition1"];
     }
-    if (isset($_form["condition2"])) {
+    if (isset($form["condition2"])) {
         $Condition[] = $form["condition2"];
     }
-    if (isset($_form["condition3"])) {
+    if (isset($form["condition3"])) {
         $Condition[] = $form["condition3"];
     }
     $searchURL = "https://svcs.ebay.com/services/search/FindingService/v1?";
@@ -461,11 +461,11 @@ similarProcess();
     <div class="divideLine"></div>
     <form name="myform" method="POST" id="form" >
         <b>Keyword</b>
-        <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="default" required/>
+        <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="iPhone" required/>
         <br/>
         <b>Category</b>
         <select class="categoryInput" name="category">
-            <option id="All" value="All" selected=true>All Categories</option>
+            <option id="All" value="All" selected=false>All Categories</option>
             <option id="Art" value="Art" selected=false>Art</option>
             <option id="Baby" value="Baby" selected=false>Baby</option>
             <option id="Books" value="Books" selected=false>Books</option>
@@ -488,7 +488,7 @@ similarProcess();
         <input id="nearbySearch" class="nearbySearch" type="checkbox" name="nearbySearch" value="enabled"
                onchange="enableSearch(this)"><b>Enable Nearby Search</b>
         <input id="milesInput" type="text" name="distance" maxlength="255" size="100" placeholder="10" value="10"
-               disabled>
+               disabled required>
         <b id="milesLabel">miles from</b>
         <input id="hereRadio" type="radio" name="hereRadio" value="Here" checked disabled onclick="clickHere()">
         <id id="hereLabel">Here</id>
@@ -518,8 +518,6 @@ similarProcess();
 
 <script type="text/javascript">
     function loadForm () {
-        document.getElementById("keywordInput").value="USC";
-
         document.getElementById("All").selected=false;
         document.getElementById("Art").selected=false;
         document.getElementById("Baby").selected=false;
@@ -529,8 +527,14 @@ similarProcess();
         document.getElementById("HB").selected=false;
         document.getElementById("Music").selected=false;
         document.getElementById("VGC").selected=false;
-
-        document.getElementById("Art").selected=true;
+        if (<?php if (isset($form["category"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("<?php if (isset($form["category"])) {echo $form["category"];} else {echo "";}?>").selected=true;
+        } else {
+            document.getElementById("All").selected=true;
+        }
+        if (<?php if (isset($form["keywords"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("keywordInput").setAttribute("value", "<?php if (isset($form["keywords"])) {echo $form["keywords"];} else {echo "";}?>") ;
+        }
         if (<?php if (isset($form["condition1"])) {echo "true";} else {echo "false";} ?>) {
             document.getElementById("condition1").setAttribute("checked", "true");
         }
@@ -550,17 +554,21 @@ similarProcess();
             document.getElementById("nearbySearch").setAttribute("checked", "true");
             enableSearch(document.getElementById("nearbySearch"));
         }
+        if (<?php if (isset($form["distance"])) {echo "true";} else {echo "false";} ?>) {
+            document.getElementById("milesInput").setAttribute("value", "<?php if (isset($form["distance"])) {echo $form["distance"];} else {echo "";}?>") ;
+        }
         if (<?php if (isset($form["hereRadio"])) {echo "true";} else {echo "false";} ?>) {
             document.getElementById("hereRadio").setAttribute("checked", "true");
-            document.getElementById("zipRadio").setAttribute("checked", "false");
+            document.getElementById("zipRadio").checked = false;
         }
         if (<?php if (isset($form["zipRadio"])) {echo "true";} else {echo "false";} ?>) {
             document.getElementById("zipRadio").setAttribute("checked", "true");
-            document.getElementById("hereRadio").setAttribute("checked", "false");
+            document.getElementById("zipInput").removeAttribute("disabled");
+            document.getElementById("hereRadio").checked = false;
         }
 
      if (<?php if (isset($form["zipInput"])) {echo "true";} else {echo "false";} ?>) {
-           document.getElementById("zipInput").setAttribute("value", <?php echo $form["zipInput"]?>);
+           document.getElementById("zipInput").setAttribute("value", <?php if (isset($form["zipInput"])) {echo $form["zipInput"];} else {echo "";}?>);
        }
     }
     function enableSearch(checkbox) {
@@ -582,6 +590,13 @@ similarProcess();
             document.getElementById("hereRadio").setAttribute("disabled", "disabled");
             document.getElementById("milesLabel").setAttribute("style", "color: grey");
             document.getElementById("hereLabel").setAttribute("style", "color: grey");
+
+            document.getElementById("milesInput").setAttribute("value", "10");
+            document.getElementById("hereRadio").checked=true;
+            document.getElementById("zipRadio").checked=false;
+            document.getElementById("zipInput").setAttribute("value", "");
+
+
         }
     }
 
