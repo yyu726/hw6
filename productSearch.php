@@ -119,7 +119,7 @@
         }
         #iframeSeller {
             width:1600px;
-            height : 3000px;
+            height : 300px;
             outline: dotted;
             overflow-x: hidden;
         }
@@ -164,6 +164,17 @@
         img {
             width: 100px;
         }
+
+        .detailRefrence {
+            cursor: pointer;
+
+        }
+
+        .detailRefrence:hover {
+            color:grey;
+
+        }
+
     </style>
 </head>
 
@@ -441,7 +452,12 @@ if (isset($_POST["keywords"])) {
     searchProcess();
     //echo($itemJSON);
 }
-$itemId = '233153942491';
+$itemId = null;
+if (isset($_POST["itemId"]) && $_POST["itemId"] != '') {
+    $itemId = $_POST["itemId"];
+} else {
+    $itemId = '233153942491';
+}
 $detailObj = 'null';
 $detailJSON = 'null';
 $sellerJSON = 'null';
@@ -452,6 +468,7 @@ detailRequest($itemId);
 detailProcess();
 similarRequest($itemId);
 similarProcess();
+var_dump($_POST);
 ?>
 
 <div class="mainbox">
@@ -459,9 +476,10 @@ similarProcess();
         <p class="title">Product Search</p>
     </div>
     <div class="divideLine"></div>
-    <form name="myform" method="POST" id="form" >
+    <form id="form" name="myform" method="POST">
         <b>Keyword</b>
         <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="iPhone" required/>
+        <input id="itemId" class="itemId" name="itemId" type="text" maxlength="255" size="100" style="display:none" value="" >
         <br/>
         <b>Category</b>
         <select class="categoryInput" name="category">
@@ -612,6 +630,10 @@ similarProcess();
             document.getElementById("hereRadio").checked = false;
     }
 
+    function clickDetail(string) {
+        document.getElementById("itemId").value=string;
+        document.getElementById("form").submit();
+    }
     function loadPage() {
         loadForm();
         drawSearch();
@@ -642,6 +664,9 @@ similarProcess();
 
 
     function generateSearchHTML(jsonObj) {
+
+        itemId_search = [];
+
         root = jsonObj.DocumentElement;
         search_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
         search_text += "<table id='searchTable' >";
@@ -675,9 +700,11 @@ similarProcess();
                         search_text += "<td><img src='" + search_item[key] + "'></td>";
                     }
                 } else if (search_item_keys[j] == "ItemId") {
-                    //continue;
-                    search_text += "<td>" + search_item[key] + "</td>";
-                } else {
+                    continue;
+                } else if (search_item_keys[j] == "Name") {
+                    search_text += "<td><p class=detailRefrence onclick=clickDetail(" + search_item["ItemId"] + ")>" + search_item["Name"] + "</p></td>";
+                }
+                else {
                     search_text += "<td>" + search_item[key] + "</td>";
                 }
 
@@ -691,6 +718,9 @@ similarProcess();
     }
 
     function generateDetailHTML(jsonObj) {
+
+
+
         root = jsonObj.DocumentElement;
         detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
         detail_text = "<H1 style='text-align:center;margin:auto'>Item Details</H1>";
@@ -764,11 +794,12 @@ similarProcess();
             similar = jsonObj[i]; //get properties of a film (an object)
             //start a new row of the output table
             similar_text += "<td>";
+
             if (similar['Photo'] != 'N/A') {
-                similar_text += "<img src='" + similar['Photo'] + "' style='width:200px'><br>";
+                similar_text += "<img src='" + similar['Photo'] + "' style='width:200px' class=detailRefrence onclick=clickDetail(" + similar["ItemID"] + ")><br>";
             }
             if (similar['Title'] != 'N/A') {
-                similar_text += similar['Title'];
+                similar_text += "<p class=detailRefrence onclick=clickDetail(" + similar["ItemID"] + ")>" + similar['Title'] + "</p>";
             }
             similar_text += "</td>";
 
