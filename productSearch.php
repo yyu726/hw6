@@ -92,7 +92,7 @@ function searchProcess()
         $itemTemp = $searchResult->{'item'}[$i];
         $item[$i]["Index"] = $i + 1;
         $item[$i]["Photo"] = isset($itemTemp->{'galleryURL'}[0]) ? $itemTemp->{'galleryURL'}[0] : 'N/A';
-        $item[$i]["Name"] = isset($itemTemp->{'title'}[0]) ? $itemTemp->{'title'}[0] : 'N/A' ;
+        $item[$i]["Name"] = isset($itemTemp->{'title'}[0]) ? $itemTemp->{'title'}[0] : 'N/A';
         $item[$i]["Price"]["Currency"] = isset($itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'}) ? $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'} : 'N/A';
         $item[$i]["Price"]["Value"] = isset($itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'}) ? $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'} : 'N/A';
         //$item[$i]["Price"] = $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'@currencyId'} . $itemTemp->{'sellingStatus'}[0]->{'currentPrice'}[0]->{'__value__'};
@@ -143,10 +143,11 @@ function detailRequest($itemId)
     $detailObj = json_decode($detailText);
 }
 
-function detailProcess() {
+function detailProcess()
+{
     global $detailObj;
     $detail = null;
-    if ($detailObj->{'Ack'} == 'Failure'){
+    if ($detailObj->{'Ack'} == 'Failure') {
         $detail = array();
         $seller = '';
     }
@@ -183,7 +184,8 @@ function detailProcess() {
 
 }
 
-function similarRequest($itemId) {
+function similarRequest($itemId)
+{
     $OPERATION_NAME = 'getSimilarItems';
     $SERVICE_NAME = 'MerchandisingService';
     $SERVICE_VERSION = '1.1.0';
@@ -196,7 +198,7 @@ function similarRequest($itemId) {
     $similarURL = $similarURL . '&SERVICE-VERSION=' . $SERVICE_VERSION;
     $similarURL = $similarURL . '&CONSUMER-ID=' . $CONSUMER_ID;
     $similarURL = $similarURL . '&RESPONSE-DATA-FORMAT=' . $RESPONSE_DATA_FORMAT;
-    $similarURL = $similarURL . '&REST-PAYLOAD' ;
+    $similarURL = $similarURL . '&REST-PAYLOAD';
     $similarURL = $similarURL . '&itemId=' . $itemId;
     $similarURL = $similarURL . '&maxResults=' . $maxResults;
     //echo $similarURL;
@@ -206,11 +208,12 @@ function similarRequest($itemId) {
     $similarObj = json_decode($similarText);
 }
 
-function similarProcess() {
+function similarProcess()
+{
     global $similarObj;
 
     $similar = null;
-    if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Failure'){
+    if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Failure') {
         $similar = array();
     }
     if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Success') {
@@ -229,7 +232,8 @@ function similarProcess() {
     }
 }
 
-function initialForm() {
+function initialForm()
+{
     global $form;
     $form["keywords"] = null;
     $form["category"] = null;
@@ -241,6 +245,7 @@ function initialForm() {
     $form["nearbySearch"] = null;
     $form["zipInput"] = null;
 }
+
 $form;
 initialForm();
 
@@ -288,7 +293,7 @@ similarProcess();
             font-family: Times New Roman;
         }
 
-        div.mainPage {
+        div.divForm {
             width: var(--bodyWidth);
             margin: auto;
             text-align: center;
@@ -296,12 +301,12 @@ similarProcess();
             border-color: rgb(175, 175, 175);
         }
 
-        div.pageTitle {
+        div.formTitle {
             width: var(--bodyWidth);
             height: 55px;
         }
 
-        p.pageTitle {
+        p.formTitle {
             margin: 0px;
             height: 50px;
             font-style: italic;
@@ -370,45 +375,51 @@ similarProcess();
         input[type=submit] {
             margin-left: 250px;
         }
+
         #divSearch {
-            margin:auto;
-            width:1400px;
-            margin-top:100px;
+            margin: auto;
+            width: 1400px;
+            margin-top: 100px;
         }
+
         #divDetail {
             margin: auto;
-            margin-top:100px;
+            margin-top: 100px;
             width: 800px;
         }
+
         #sellerButton {
-            width:300px;
-            height:100px;
-            margin:auto;
+            width: 300px;
+            height: 100px;
+            margin: auto;
         }
-        #divSeller{
-            margin:auto;
-            width:1600px;
-            height:300px;
+
+        #divSeller {
+            margin: auto;
+            width: 1600px;
+            height: 300px;
         }
+
         #iframeSeller {
-            margin:0px;
-            padding:0px;
-            width:1600px;
-            height : 300px;
+            margin: 0px;
+            padding: 0px;
+            width: 1600px;
+            height: 300px;
             outline: dotted;
             overflow-x: hidden;
         }
+
         #similarButton {
-            width:300px;
-            height:100px;
-            margin:auto;
+            width: 300px;
+            height: 100px;
+            margin: auto;
         }
 
         #divSimilar {
-            margin:auto;
+            margin: auto;
             margin: auto;
             width: 1000px;
-            overflow:auto;
+            overflow: auto;
             border: 2px solid rgb(200, 200, 200);
 
         }
@@ -428,13 +439,15 @@ similarProcess();
         }
 
         #divSimilar td {
-            border:none;
-            padding-left:20px;
-            padding-right:20px;
+            border: none;
+            padding-left: 20px;
+            padding-right: 20px;
         }
+
         #similarTable {
-            border:none;
+            border: none;
         }
+
         img {
             width: 100px;
         }
@@ -445,7 +458,7 @@ similarProcess();
         }
 
         .detailRefrence:hover {
-            color:grey;
+            color: grey;
 
         }
 
@@ -454,27 +467,29 @@ similarProcess();
 
 <body onload="loadPage()">
 
-<div class="mainPage">
-    <div class="pageTitle">
-        <p class="pageTitle">Product Search</p>
+<div class="divForm">
+    <div class="formTitle">
+        <p class="formTitle">Product Search</p>
     </div>
     <div class="divideLine"></div>
     <form id="myForm" name="myForm" method="POST">
         <b>Keyword</b>
-        <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="iPhone" required/>
-        <input id="itemIdInput" class="itemIdInput" name="itemIdInput" type="text" maxlength="255" size="100" style="display:none" value="" disabled>
+        <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100"
+               value="iPhone" required/>
+        <input id="itemIdInput" class="itemIdInput" name="itemIdInput" type="text" maxlength="255" size="100"
+               style="display:none" value="" disabled>
         <br/>
         <b>Category</b>
         <select class="categoryInput" name="category">
-            <option id="All" value="All" selected=false>All Categories</option>
-            <option id="Art" value="Art" selected=false>Art</option>
-            <option id="Baby" value="Baby" selected=false>Baby</option>
-            <option id="Books" value="Books" selected=false>Books</option>
-            <option id="CSA" value="CSA" selected=false>Clothing, Shoes & Accessories</option>
-            <option id="CTN" value="CTN" selected=false>Computer/Tablets & Networking</option>
-            <option id="HB" value="HB" selected=false>Health & Beauty</option>
-            <option id="Music" value="Music" selected=false>Music</option>
-            <option id="VGC" value="VGC" selected="false">Video Games & Consoles</option>
+            <option id="All" value="All">All Categories</option>
+            <option id="Art" value="Art">Art</option>
+            <option id="Baby" value="Baby">Baby</option>
+            <option id="Books" value="Books">Books</option>
+            <option id="CSA" value="CSA">Clothing, Shoes & Accessories</option>
+            <option id="CTN" value="CTN">Computer/Tablets & Networking</option>
+            <option id="HB" value="HB">Health & Beauty</option>
+            <option id="Music" value="Music">Music</option>
+            <option id="VGC" value="VGC">Video Games & Consoles</option>
         </select>
         <br/>
         <b>Condition</b>
@@ -498,89 +513,190 @@ similarProcess();
         <input id="zipInput" type="text" name="zipInput" maxlength="5" placeholder="zip code" disabled required>
         <br/>
         <input id="submitButton" type="submit" value="Search" disabled>
-        <input type="reset" value="Clear">
+        <button type="button" onclick="clearPage()">Clear</button>
     </form>
-
 </div>
+
 <div id="pageSearch" name="pageSearch" style="display:none">
     <div id="divSearch" name="divSearch"></div>
 </div>
 
-<div id="pageDetail" name="detailPage" style="display:none">
+<div id="pageDetail" name="pageDetail" style="display:none">
     <div id="divDetail" name="divDetail"></div>
-    <div id="sellerButton" name="sellerButton" style="text-align: center; outline:dotted" onclick="clickSeller()" data-checked="false">
+    <div id="sellerButton" name="sellerButton" style="text-align: center" onclick="clickSeller()" data-checked="false">
         <p id="sellerButtonText" style="color:grey">click to show seller message</p>
-        <img id="sellerButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png" style="width:40px; height:20px">
+        <img id="sellerButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png"
+             style="width:40px; height:20px">
     </div>
     <div id="divSeller" name="divSeller" style="display:none">
         <iframe id="iframeSeller" name="iframeSeller" onload="resizeIframe(this)"></iframe>
     </div>
 
-    <div id="similarButton" name="similarButton" style="text-align: center; outline:dotted" onclick="clickSimilar()" data-checked="false">
+    <div id="similarButton" name="similarButton" style="text-align: center" onclick="clickSimilar()"
+         data-checked="false">
         <p id="similarButtonText" style="color:grey">click to show similar message</p>
-        <img id="similarButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png" style="width:40px; height:20px">
+        <img id="similarButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png"
+             style="width:40px; height:20px">
     </div>
     <div id="divSimilar" name="divSimilar" style="display:none"></div>
 </div>
 
-
-
-
 <script type="text/javascript">
-    function loadForm () {
-        document.getElementById("All").selected=false;
-        document.getElementById("Art").selected=false;
-        document.getElementById("Baby").selected=false;
-        document.getElementById("Books").selected=false;
-        document.getElementById("CSA").selected=false;
-        document.getElementById("CTN").selected=false;
-        document.getElementById("HB").selected=false;
-        document.getElementById("Music").selected=false;
-        document.getElementById("VGC").selected=false;
-        if (<?php if (isset($form["category"])) {echo "true";} else {echo "false";} ?>) {
-            document.getElementById("<?php if (isset($form["category"])) {echo $form["category"];} else {echo "";}?>").selected=true;
+    function clearPage() {
+        document.getElementById("keywordInput").setAttribute("value", "iPhone");
+
+        document.getElementById("All").removeAttribute("selected");
+        document.getElementById("Art").removeAttribute("selected");
+        document.getElementById("Baby").removeAttribute("selected");
+        document.getElementById("Books").removeAttribute("selected");
+        document.getElementById("CSA").removeAttribute("selected");
+        document.getElementById("CTN").removeAttribute("selected");
+        document.getElementById("HB").removeAttribute("selected");
+        document.getElementById("Music").removeAttribute("selected");
+        document.getElementById("VGC").removeAttribute("selected");
+        document.getElementById("All").setAttribute("selected", "true");
+
+        document.getElementById("condition1").removeAttribute("checked");
+        document.getElementById("condition2").removeAttribute("checked");
+        document.getElementById("condition3").removeAttribute("checked");
+        document.getElementById("shipping1").removeAttribute("checked");
+        document.getElementById("shipping2").removeAttribute("checked");
+
+        document.getElementById("milesInput").setAttribute("disabled", "disabled");
+        document.getElementById("zipRadio").setAttribute("disabled", "disabled");
+        document.getElementById("zipInput").setAttribute("disabled", "disabled");
+        document.getElementById("hereRadio").setAttribute("disabled", "disabled");
+        document.getElementById("milesLabel").setAttribute("style", "color: grey");
+        document.getElementById("hereLabel").setAttribute("style", "color: grey");
+        document.getElementById("milesInput").setAttribute("value", "10");
+        document.getElementById("hereRadio").checked = true;
+        document.getElementById("zipRadio").removeAttribute("checked");
+        document.getElementById("zipInput").setAttribute("value", "");
+
+        document.getElementById("myForm").reset();
+
+        document.getElementById("pageSearch").style.display="none";
+        document.getElementById("pageDetail").style.display="none";
+    }
+
+    function loadForm() {
+        document.getElementById("All").removeAttribute("selected");
+        document.getElementById("Art").removeAttribute("selected");
+        document.getElementById("Baby").removeAttribute("selected");
+        document.getElementById("Books").removeAttribute("selected");
+        document.getElementById("CSA").removeAttribute("selected");
+        document.getElementById("CTN").removeAttribute("selected");
+        document.getElementById("HB").removeAttribute("selected");
+        document.getElementById("Music").removeAttribute("selected");
+        document.getElementById("VGC").removeAttribute("selected");
+        if (<?php if (isset($form["category"])) {
+            echo "true";
         } else {
-            document.getElementById("All").selected=true;
+            echo "false";
+        } ?>) {
+            document.getElementById("<?php if (isset($form["category"])) {
+                echo $form["category"];
+            } else {
+                echo "";
+            }?>").setAttribute("selected", "true");
+        } else {
+            document.getElementById("All").setAttribute("selected", "true");
         }
-        if (<?php if (isset($form["keywords"])) {echo "true";} else {echo "false";} ?>) {
-            document.getElementById("keywordInput").setAttribute("value", "<?php if (isset($form["keywords"])) {echo $form["keywords"];} else {echo "";}?>") ;
+        if (<?php if (isset($form["keywords"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
+            document.getElementById("keywordInput").setAttribute("value", "<?php if (isset($form["keywords"])) {
+                echo $form["keywords"];
+            } else {
+                echo "";
+            }?>");
         }
-        if (<?php if (isset($form["condition1"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["condition1"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("condition1").setAttribute("checked", "true");
         }
-        if (<?php if (isset($form["condition2"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["condition2"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("condition2").setAttribute("checked", "true");
         }
-        if (<?php if (isset($form["condition3"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["condition3"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("condition3").setAttribute("checked", "true");
         }
-        if (<?php if (isset($form["shipping1"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["shipping1"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("shipping1").setAttribute("checked", "true");
         }
-        if (<?php if (isset($form["shipping2"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["shipping2"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("shipping2").setAttribute("checked", "true");
         }
-        if (<?php if (isset($form["nearbySearch"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["nearbySearch"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("nearbySearch").setAttribute("checked", "true");
             enableSearch(document.getElementById("nearbySearch"));
         }
-        if (<?php if (isset($form["distance"])) {echo "true";} else {echo "false";} ?>) {
-            document.getElementById("milesInput").setAttribute("value", "<?php if (isset($form["distance"])) {echo $form["distance"];} else {echo "";}?>") ;
+        if (<?php if (isset($form["distance"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
+            document.getElementById("milesInput").setAttribute("value", "<?php if (isset($form["distance"])) {
+                echo $form["distance"];
+            } else {
+                echo "";
+            }?>");
         }
-        if (<?php if (isset($form["hereRadio"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["hereRadio"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("hereRadio").setAttribute("checked", "true");
             document.getElementById("zipRadio").checked = false;
         }
-        if (<?php if (isset($form["zipRadio"])) {echo "true";} else {echo "false";} ?>) {
+        if (<?php if (isset($form["zipRadio"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
             document.getElementById("zipRadio").setAttribute("checked", "true");
             document.getElementById("zipInput").removeAttribute("disabled");
             document.getElementById("hereRadio").checked = false;
         }
-
-     if (<?php if (isset($form["zipInput"])) {echo "true";} else {echo "false";} ?>) {
-           document.getElementById("zipInput").setAttribute("value", <?php if (isset($form["zipInput"])) {echo $form["zipInput"];} else {echo "";}?>);
-       }
+        if (<?php if (isset($form["zipInput"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
+            document.getElementById("zipInput").setAttribute("value", <?php if (isset($form["zipInput"])) {
+                echo $form["zipInput"];
+            } else {
+                echo "";
+            }?>);
+        }
     }
+
     function enableSearch(checkbox) {
         if (checkbox.checked == true) {
             document.getElementById("milesInput").removeAttribute("disabled");
@@ -602,44 +718,42 @@ similarProcess();
             document.getElementById("hereLabel").setAttribute("style", "color: grey");
 
             document.getElementById("milesInput").setAttribute("value", "10");
-            document.getElementById("hereRadio").checked=true;
-            document.getElementById("zipRadio").checked=false;
+            document.getElementById("hereRadio").checked = true;
+            document.getElementById("zipRadio").checked = false;
             document.getElementById("zipInput").setAttribute("value", "");
-
-
         }
     }
 
     function clickHere() {
-            document.getElementById("zipInput").setAttribute("disabled", "disabled");
-            document.getElementById("hereRadio").setAttribute("checked", "true");
-            document.getElementById("zipRadio").checked = false;
-            document.getElementById("zipInput").setAttribute("value", "");
+        document.getElementById("zipInput").setAttribute("disabled", "disabled");
+        document.getElementById("hereRadio").setAttribute("checked", "true");
+        document.getElementById("zipRadio").checked = false;
+        document.getElementById("zipInput").setAttribute("value", "");
     }
 
     function clickZip() {
-            document.getElementById("zipInput").removeAttribute("disabled");
-            document.getElementById("zipRadio").setAttribute("checked", "true");
-            document.getElementById("hereRadio").checked = false;
+        document.getElementById("zipInput").removeAttribute("disabled");
+        document.getElementById("zipRadio").setAttribute("checked", "true");
+        document.getElementById("hereRadio").checked = false;
     }
 
     function clickDetail(string) {
-        document.getElementById("itemIdInput").disabled=false;
-        document.getElementById("itemIdInput").value=string;
+        document.getElementById("itemIdInput").disabled = false;
+        document.getElementById("itemIdInput").value = string;
         document.getElementById("myForm").submit();
     }
 
-
     function clickSeller() {
-        if (document.getElementById("sellerButton").getAttribute("data-checked")=="false") {
+        if (document.getElementById("sellerButton").getAttribute("data-checked") == "false") {
             showSeller();
             hideSimilar();
         } else {
             hideSeller();
         }
     }
+
     function clickSimilar() {
-        if (document.getElementById("similarButton").getAttribute("data-checked")=="false") {
+        if (document.getElementById("similarButton").getAttribute("data-checked") == "false") {
             showSimilar();
             hideSeller();
         } else {
@@ -649,50 +763,42 @@ similarProcess();
 
     function showSeller() {
         document.getElementById("sellerButton").setAttribute("data-checked", "true");
-        document.getElementById("sellerButtonText").innerHTML="click to hide seller message";
-        document.getElementById("sellerButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_up.png";
-        document.getElementById("divSeller").style.display="";
+        document.getElementById("sellerButtonText").innerHTML = "click to hide seller message";
+        document.getElementById("sellerButtonArrow").src = "http://csci571.com/hw/hw6/images/arrow_up.png";
+        document.getElementById("divSeller").style.display = "";
     }
+
     function hideSeller() {
         document.getElementById("sellerButton").setAttribute("data-checked", "false");
-        document.getElementById("sellerButtonText").innerHTML="click to show seller message";
-        document.getElementById("sellerButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_down.png";
-        document.getElementById("divSeller").style.display="none";
+        document.getElementById("sellerButtonText").innerHTML = "click to show seller message";
+        document.getElementById("sellerButtonArrow").src = "http://csci571.com/hw/hw6/images/arrow_down.png";
+        document.getElementById("divSeller").style.display = "none";
     }
+
     function showSimilar() {
         document.getElementById("similarButton").setAttribute("data-checked", "true");
-        document.getElementById("similarButtonText").innerHTML="click to hide similar message";
-        document.getElementById("similarButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_up.png";
-        document.getElementById("divSimilar").style.display="";
+        document.getElementById("similarButtonText").innerHTML = "click to hide similar message";
+        document.getElementById("similarButtonArrow").src = "http://csci571.com/hw/hw6/images/arrow_up.png";
+        document.getElementById("divSimilar").style.display = "";
     }
+
     function hideSimilar() {
         document.getElementById("similarButton").setAttribute("data-checked", "false");
-        document.getElementById("similarButtonText").innerHTML="click to show similar message";
-        document.getElementById("similarButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_down.png";
-        document.getElementById("divSimilar").style.display="none";
+        document.getElementById("similarButtonText").innerHTML = "click to show similar message";
+        document.getElementById("similarButtonArrow").src = "http://csci571.com/hw/hw6/images/arrow_down.png";
+        document.getElementById("divSimilar").style.display = "none";
     }
+
     function getLocation() {
         var s = document.createElement("script");
         s.src = "http://ip-api.com/json/?callback=setLocation";
         document.body.appendChild(s);
-
     }
 
-    function setLocation(json){
-        var zip=json.zip
+    function setLocation(json) {
+        var zip = json.zip
         document.getElementById("submitButton").removeAttribute("disabled");
         document.getElementById("hereRadio").setAttribute("value", zip);
-    }
-    function loadPage() {
-        getLocation();
-        loadForm();
-        if (<?php if (isset($form["itemIdInput"])) {echo "true";} else {echo "false";} ?>) {
-            drawDetail();
-            document.getElementById("pageDetail").style.display="";
-        } else {
-            drawSearch();
-            document.getElementById("pageSearch").style.display="";
-        }
     }
 
     function drawSearch() {
@@ -706,20 +812,19 @@ similarProcess();
         detailJSON = <?php echo $detailJSON;?>;
         if (detailJSON != null) {
             detailJSON = <?php echo $detailJSON;?>;
-            sellerJSON = <?php echo $sellerJSON;?>.Description;
+            sellerJSON = <?php echo $sellerJSON;?>.
+            Description;
             similarJSON = <?php echo $similarJSON;?>;
             document.getElementById("iframeSeller").srcdoc = sellerJSON;
             document.getElementById("divDetail").innerHTML = generateDetailHTML(detailJSON);
             document.getElementById("divSimilar").innerHTML = generateSimilarHTML(similarJSON);
         }
-
     }
 
     function resizeIframe(obj) {
-/*        obj.style.height = obj.contentWindow.document.body.scrollHeight + 4 + 'px';
-        document.getElementById("divSeller").height = obj.style.height;*/
+        /*        obj.style.height = obj.contentWindow.document.body.scrollHeight + 4 + 'px';
+                document.getElementById("divSeller").height = obj.style.height;*/
     }
-
 
     function generateSearchHTML(jsonObj) {
 
@@ -759,8 +864,7 @@ similarProcess();
                     continue;
                 } else if (search_item_keys[j] == "Name") {
                     search_text += "<td><p class=detailRefrence onclick=clickDetail(" + search_item["ItemId"] + ")>" + search_item["Name"] + "</p></td>";
-                }
-                else {
+                } else {
                     search_text += "<td>" + search_item[key] + "</td>";
                 }
 
@@ -783,7 +887,7 @@ similarProcess();
         for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
         {
             detail = jsonObj[i]; //get properties of a film (an object)
-                 //start a new row of the output table
+            //start a new row of the output table
             detail_keys = Object.keys(detail);
             for (j = 0; j < detail_keys.length; j++) {
                 key = detail_keys[j];
@@ -810,7 +914,7 @@ similarProcess();
                     if (detail['Location'] != 'N/A' && detail['PostalCode'] != 'N/A') {
                         detail_text += "<tr>";
                         detail_text += "<td><b>" + "Location" + "</b></td>";
-                        detail_text += "<td>" + detail['Location'] +", " + detail['PostalCode'] + "</td>";
+                        detail_text += "<td>" + detail['Location'] + ", " + detail['PostalCode'] + "</td>";
                         detail_text += "</tr>";
                     }
                     if (detail['Location'] != 'N/A' && detail['PostalCode'] == 'N/A') {
@@ -873,6 +977,22 @@ similarProcess();
         similar_text += "</table>";
         similar_text += "</body></html>";
         return similar_text;
+    }
+
+    function loadPage() {
+        getLocation();
+        loadForm();
+        if (<?php if (isset($form["itemIdInput"])) {
+            echo "true";
+        } else {
+            echo "false";
+        } ?>) {
+            drawDetail();
+            document.getElementById("pageDetail").style.display = "";
+        } else {
+            drawSearch();
+            document.getElementById("pageSearch").style.display = "";
+        }
     }
 </script>
 
