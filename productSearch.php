@@ -2,6 +2,9 @@
 function searchRequest()
 {
     global $form;
+    if ($form == null) {
+        return;
+    }
     $OPERATION_NAME = 'findItemsAdvanced';
     $SERVICE_VERSION = '1.0.0';
     $SECURITY_APPNAME = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
@@ -74,17 +77,17 @@ function searchRequest()
         $filterCount++;
     }
     $searchText = file_get_contents($searchURL);
-    global $searchObj;
+
     $searchObj = json_decode($searchText);
 
+    searchProcess($searchObj);
     //echo $searchURL;
     //echo $searchText;
     //var_dump($searchObj);
 }
 
-function searchProcess()
+function searchProcess($searchObj)
 {
-    global $searchObj;
     $searchResult = $searchObj->{'findItemsAdvancedResponse'}[0]->{'searchResult'}[0];
     $itemCount = $searchResult->{'@count'};
     $item = array();
@@ -121,6 +124,9 @@ function searchProcess()
 
 function detailRequest($itemId)
 {
+    if ($itemId == null) {
+        return;
+    }
     $callName = 'GetSingleItem';
     $responseencoding = 'JSON';
     $appid = 'YangYu-CSCI571-PRD-7a6d8bb94-950c1bc5';
@@ -139,13 +145,14 @@ function detailRequest($itemId)
     //echo $detailURL;
     $detailText = file_get_contents($detailURL);
     //var_dump($detailText);
-    global $detailObj;
+
     $detailObj = json_decode($detailText);
+
+    detailProcess($detailObj);
 }
 
-function detailProcess()
+function detailProcess($detailObj)
 {
-    global $detailObj;
     $detail = null;
     if ($detailObj->{'Ack'} == 'Failure') {
         $detail = array();
@@ -181,11 +188,13 @@ function detailProcess()
     $detailJSON = json_encode($detail);
     //var_dump($detailJSON);
 
-
 }
 
 function similarRequest($itemId)
 {
+    if ($itemId == null) {
+        return;
+    }
     $OPERATION_NAME = 'getSimilarItems';
     $SERVICE_NAME = 'MerchandisingService';
     $SERVICE_VERSION = '1.1.0';
@@ -204,14 +213,14 @@ function similarRequest($itemId)
     //echo $similarURL;
     $similarText = file_get_contents($similarURL);
     //var_dump($similarText);
-    global $similarObj;
+
     $similarObj = json_decode($similarText);
+
+    similarProcess($similarObj);
 }
 
-function similarProcess()
+function similarProcess($similarObj)
 {
-    global $similarObj;
-
     $similar = null;
     if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Failure') {
         $similar = array();
@@ -232,48 +241,18 @@ function similarProcess()
     }
 }
 
-function initialForm()
-{
-    global $form;
-    $form["keywords"] = null;
-    $form["category"] = null;
-    $form["condition1"] = null;
-    $form["condition2"] = null;
-    $form["condition3"] = null;
-    $form["shipping1"] = null;
-    $form["shipping2"] = null;
-    $form["nearbySearch"] = null;
-    $form["zipInput"] = null;
-}
 
-$form;
-initialForm();
-
-$searchObj = 'null';
-$itemJSON = 'null';
-if (isset($_POST["keywords"])) {
-    $form = $_POST;
-    searchRequest();
-    searchProcess();
-    //echo($itemJSON);
-}
-$itemId = null;
-if (isset($_POST["itemIdInput"]) && $_POST["itemIdInput"] != '') {
-    $itemId = $_POST["itemIdInput"];
-} else {
-    $itemId = '233153942491';
-}
-$detailObj = 'null';
-$detailJSON = 'null';
-$sellerJSON = 'null';
-$similarObj = 'null';
-$similarJSON = 'null';
+$form = isset($_POST["keywords"]) ? $_POST : null;
+$itemJSON = null;
+searchRequest();
+$itemId = isset($_POST["itemIdInput"]) ? $itemId = $_POST["itemIdInput"] : null;
+$detailJSON = null;
+$sellerJSON = null;
+$similarJSON = null;
 detailRequest($itemId);
-//var_dump($detailObj);
-detailProcess();
 similarRequest($itemId);
-similarProcess();
 //var_dump($_POST);
+
 ?>
 
 <html>
@@ -523,20 +502,20 @@ similarProcess();
 
 <div id="pageDetail" name="pageDetail" style="display:none">
     <div id="divDetail" name="divDetail"></div>
-    <div id="sellerButton" name="sellerButton" style="text-align: center" onclick="clickSeller()" data-checked="false">
+    <div id="sellerButton" name="sellerButton" style="text-align: center" data-checked="false">
         <p id="sellerButtonText" style="color:grey">click to show seller message</p>
         <img id="sellerButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png"
-             style="width:40px; height:20px">
+             style="width:40px; height:20px" onclick="clickSeller()">
     </div>
     <div id="divSeller" name="divSeller" style="display:none">
         <iframe id="iframeSeller" name="iframeSeller" onload="resizeIframe(this)"></iframe>
     </div>
 
-    <div id="similarButton" name="similarButton" style="text-align: center" onclick="clickSimilar()"
+    <div id="similarButton" name="similarButton" style="text-align: center"
          data-checked="false">
         <p id="similarButtonText" style="color:grey">click to show similar message</p>
         <img id="similarButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png"
-             style="width:40px; height:20px">
+             style="width:40px; height:20px" onclick="clickSimilar()">
     </div>
     <div id="divSimilar" name="divSimilar" style="display:none"></div>
 </div>
@@ -561,6 +540,7 @@ similarProcess();
         document.getElementById("condition3").removeAttribute("checked");
         document.getElementById("shipping1").removeAttribute("checked");
         document.getElementById("shipping2").removeAttribute("checked");
+        document.getElementById("nearbySearch").removeAttribute("checked");
 
         document.getElementById("milesInput").setAttribute("disabled", "disabled");
         document.getElementById("zipRadio").setAttribute("disabled", "disabled");
@@ -575,8 +555,8 @@ similarProcess();
 
         document.getElementById("myForm").reset();
 
-        document.getElementById("pageSearch").style.display="none";
-        document.getElementById("pageDetail").style.display="none";
+        document.getElementById("pageSearch").style.display = "none";
+        document.getElementById("pageDetail").style.display = "none";
     }
 
     function loadForm() {
@@ -802,19 +782,18 @@ similarProcess();
     }
 
     function drawSearch() {
-        itemJSON = <?php echo $itemJSON;?>;
-        if (itemJSON != null) {
+        if (<?php if(isset($itemJSON)) {echo "true";} else {echo "false";} ?>) {
+            itemJSON = <?php if(isset($itemJSON)) {echo $itemJSON;} else {echo "null";} ?>;
             document.getElementById("divSearch").innerHTML = generateSearchHTML(itemJSON);
         }
     }
 
     function drawDetail() {
-        detailJSON = <?php echo $detailJSON;?>;
-        if (detailJSON != null) {
-            detailJSON = <?php echo $detailJSON;?>;
-            sellerJSON = <?php echo $sellerJSON;?>.
-            Description;
-            similarJSON = <?php echo $similarJSON;?>;
+        if (<?php if(isset($detailJSON)) {echo "true";} else {echo "false";} ?>) {
+            detailJSON = <?php if(isset($detailJSON)) {echo $detailJSON;} else {echo "null";} ?>;
+            sellerJSON = <?php if(isset($sellerJSON)) {echo $sellerJSON;} else {echo "null";} ?>;
+            sellerJSON = sellerJSON["Description"];
+            similarJSON = <?php if(isset($similarJSON)) {echo $similarJSON;} else {echo "null";} ?>;
             document.getElementById("iframeSeller").srcdoc = sellerJSON;
             document.getElementById("divDetail").innerHTML = generateDetailHTML(detailJSON);
             document.getElementById("divSimilar").innerHTML = generateSimilarHTML(similarJSON);
@@ -822,8 +801,8 @@ similarProcess();
     }
 
     function resizeIframe(obj) {
-        /*        obj.style.height = obj.contentWindow.document.body.scrollHeight + 4 + 'px';
-                document.getElementById("divSeller").height = obj.style.height;*/
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
     }
 
     function generateSearchHTML(jsonObj) {
