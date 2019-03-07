@@ -13,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="247" column="10" lean-forward="true" selection-start-line="247" selection-start-column="10" selection-end-line="247" selection-end-column="10" />
+            <state relative-caret-position="298">
+              <caret line="819" column="84" lean-forward="true" selection-start-line="819" selection-start-column="84" selection-end-line="819" selection-end-column="84" />
               <folding>
                 <element signature="n#head#0;n#html#0;n#!!top" />
                 <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
@@ -84,13 +84,13 @@
       <find>request</find>
       <find>iphone</find>
       <find>onload</find>
-      <find>iframe</find>
       <find>iframeseller</find>
-      <find>resize</find>
       <find>searchobj</find>
       <find>itemJSON</find>
       <find>sellerJSON</find>
       <find>clickdetail</find>
+      <find>resize</find>
+      <find>iframe</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -175,16 +175,15 @@
       <workItem from="1551852520994" duration="2731000" />
       <workItem from="1551900968870" duration="6438000" />
       <workItem from="1551913587898" duration="8929000" />
-      <workItem from="1551926747967" duration="10660000" />
+      <workItem from="1551926747967" duration="13507000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="113308000" />
+    <option name="totallyTimeSpent" value="116155000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.39429176" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -243,8 +242,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="247" column="10" lean-forward="true" selection-start-line="247" selection-start-column="10" selection-end-line="247" selection-end-column="10" />
+        <state relative-caret-position="298">
+          <caret line="819" column="84" lean-forward="true" selection-start-line="819" selection-start-column="84" selection-end-line="819" selection-end-column="84" />
           <folding>
             <element signature="n#head#0;n#html#0;n#!!top" />
             <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
