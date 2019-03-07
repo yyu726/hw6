@@ -13,13 +13,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="477" column="34" lean-forward="true" selection-start-line="477" selection-start-column="34" selection-end-line="477" selection-end-column="34" />
+            <state relative-caret-position="208">
+              <caret line="461" column="31" selection-start-line="461" selection-start-column="31" selection-end-line="461" selection-end-column="31" />
               <folding>
+                <element signature="n#searchRequest#0;n#!!top" />
+                <element signature="n#searchProcess#0;n#!!top" />
                 <element signature="n#detailRequest#0;n#!!top" />
                 <element signature="n#detailProcess#0;n#!!top" />
                 <element signature="n#similarRequest#0;n#!!top" />
-                <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#similarProcess#0;n#!!top" />
+                <element signature="n#initialForm#0;n#!!top" />
+                <element signature="n#head#0;n#html#0;n#!!top" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
@@ -35,19 +39,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>keyword</find>
-      <find>var_dump</find>
-      <find>generateHTML</find>
-      <find>display</find>
-      <find>foo</find>
-      <find>iframe</find>
-      <find>contentbox</find>
-      <find>description</find>
-      <find>echo</find>
-      <find>dump</find>
-      <find>maxdistance</find>
-      <find>loadpage</find>
-      <find>global</find>
       <find>centerpoint</find>
       <find>zipcode</find>
       <find>zipinput</find>
@@ -59,8 +50,25 @@
       <find>ItemId</find>
       <find>$_POST[&quot;itemId&quot;]</find>
       <find>&quot;itemId&quot;</find>
-      <find>clickdetail</find>
       <find>refrence</find>
+      <find>clickdetail</find>
+      <find>resize</find>
+      <find>divSeller</find>
+      <find>button</find>
+      <find>click</find>
+      <find>dump</find>
+      <find>echo</find>
+      <find>searchURL</find>
+      <find>enableSearch</find>
+      <find>loadpage</find>
+      <find>csci571</find>
+      <find>clickhere</find>
+      <find>submitbutton</find>
+      <find>hereradio</find>
+      <find>mainbox</find>
+      <find>title</find>
+      <find>getElementById(&quot;form&quot;)</find>
+      <find>myform</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -144,11 +152,13 @@
       <workItem from="1551825596194" duration="16311000" />
       <workItem from="1551852520994" duration="2731000" />
       <workItem from="1551900968870" duration="6438000" />
+      <workItem from="1551913587898" duration="8929000" />
+      <workItem from="1551926747967" duration="527000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="93719000" />
+    <option name="totallyTimeSpent" value="103175000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -211,13 +221,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="477" column="34" lean-forward="true" selection-start-line="477" selection-start-column="34" selection-end-line="477" selection-end-column="34" />
+        <state relative-caret-position="208">
+          <caret line="461" column="31" selection-start-line="461" selection-start-column="31" selection-end-line="461" selection-end-column="31" />
           <folding>
+            <element signature="n#searchRequest#0;n#!!top" />
+            <element signature="n#searchProcess#0;n#!!top" />
             <element signature="n#detailRequest#0;n#!!top" />
             <element signature="n#detailProcess#0;n#!!top" />
             <element signature="n#similarRequest#0;n#!!top" />
-            <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#similarProcess#0;n#!!top" />
+            <element signature="n#initialForm#0;n#!!top" />
+            <element signature="n#head#0;n#html#0;n#!!top" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
