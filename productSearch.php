@@ -77,7 +77,7 @@ function searchRequest()
     global $searchObj;
     $searchObj = json_decode($searchText);
 
-    echo $searchURL;
+    //echo $searchURL;
     //echo $searchText;
     //var_dump($searchObj);
 }
