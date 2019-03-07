@@ -83,11 +83,34 @@ function searchRequest()
     searchProcess($searchObj);
     //echo $searchURL;
     //echo $searchText;
-    //var_dump($searchObj);
+    //var_dump($searchText);
 }
 
 function searchProcess($searchObj)
 {
+    global $itemJSON;
+    $itemJSON = null;
+
+    if ($searchObj->{'findItemsAdvancedResponse'}[0]->{'ack'}[0] == 'Failure') {
+        $itemJSON['Ack'] = 'Failure';
+        if (isset($searchObj->{'findItemsAdvancedResponse'}[0]->{'errorMessage'}[0]->{'error'}[0]->{'message'}[0])) {
+            $itemJSON['ErrorMessage'] = $searchObj->{'findItemsAdvancedResponse'}[0]->{'errorMessage'}[0]->{'error'}[0]->{'message'}[0];
+            if ($itemJSON['ErrorMessage'] == 'Invalid numeric value.') {
+                $itemJSON['ErrorMessage'] = 'Distance is invalid';
+            }
+            if ($itemJSON['ErrorMessage'] == 'Invalid postal code for specified country.') {
+                $itemJSON['ErrorMessage'] = 'Zipcode is invalid';
+            }
+        } else {
+            $itemJSON['ErrorMessage'] = 'Invalid Input. Search Failed.';
+        }
+        $itemJSON = json_encode($itemJSON);
+        //var_dump($itemJSON);
+        return;
+    } else {
+        $itemJSON['Ack'] = 'Success';
+    }
+
     $searchResult = $searchObj->{'findItemsAdvancedResponse'}[0]->{'searchResult'}[0];
     $itemCount = $searchResult->{'@count'};
     $item = array();
@@ -113,9 +136,7 @@ function searchProcess($searchObj)
         }
         $item[$i]["ItemId"] = $itemTemp->{'itemId'}[0];
     }
-    global $itemJSON;
-    $itemJSON = null;
-    $itemJSON['Title'] = 'fingdingResult';
+
     $itemJSON['Header'] = array('Index', 'Photo', 'Name', 'Price', 'Zip code', 'Condition', 'Shipping Option');
     $itemJSON['Item'] = $item;
     $itemJSON = json_encode($itemJSON);
@@ -142,7 +163,7 @@ function detailRequest($itemId)
     $detailURL = $detailURL . '&version=' . $version;
     $detailURL = $detailURL . '&ItemID=' . $itemId;
     $detailURL = $detailURL . '&IncludeSelector=' . $IncludeSelector;
-    //echo $detailURL;
+    echo $detailURL;
     $detailText = file_get_contents($detailURL);
     //var_dump($detailText);
 
@@ -155,7 +176,7 @@ function detailProcess($detailObj)
 {
     $detail = null;
     if ($detailObj->{'Ack'} == 'Failure') {
-        $detail = array();
+        $detail['Ack'] = 'Failure';
         $seller = '';
     }
     if ($detailObj->{'Ack'} == 'Success') {
@@ -168,7 +189,7 @@ function detailProcess($detailObj)
         if ($detail_currency == 'N/A' && $detail_value == 'N/A') {
             $detail[0]['Price'] = 'N/A';
         } else {
-            $detail[0]['Price'] = $detail_currency . $detail_value;
+            $detail[0]['Price'] =  $detail_value . " " . $detail_currency ;
         }
         $detail[0]['Location'] = isset($detailObj->{'Item'}->{'Location'}) ? $detailObj->{'Item'}->{'Location'} : 'N/A';
         $detail[0]['PostalCode'] = isset($detailObj->{'Item'}->{'PostalCode'}) ? $detailObj->{'Item'}->{'PostalCode'} : 'N/A';
@@ -355,15 +376,18 @@ similarRequest($itemId);
             margin-left: 250px;
         }
 
+        #pageSearch {
+            margin-top:30px;
+        }
         #divSearch {
             margin: auto;
             width: 1400px;
-            margin-top: 100px;
         }
-
+        #pageDetail {
+            margin:30px;
+        }
         #divDetail {
             margin: auto;
-            margin-top: 100px;
             width: 800px;
         }
 
@@ -644,7 +668,7 @@ similarRequest($itemId);
             document.getElementById("milesInput").setAttribute("value", "<?php if (isset($form["distance"])) {
                 echo $form["distance"];
             } else {
-                echo "";
+                echo '';
             }?>");
         }
         if (<?php if (isset($form["hereRadio"])) {
@@ -669,11 +693,11 @@ similarRequest($itemId);
         } else {
             echo "false";
         } ?>) {
-            document.getElementById("zipInput").setAttribute("value", <?php if (isset($form["zipInput"])) {
+            document.getElementById("zipInput").setAttribute("value", "<?php if (isset($form["zipInput"])) {
                 echo $form["zipInput"];
             } else {
-                echo "";
-            }?>);
+                echo '';
+            }?>");
         }
     }
 
@@ -795,8 +819,9 @@ similarRequest($itemId);
             sellerJSON = sellerJSON["Description"];
             similarJSON = <?php if(isset($similarJSON)) {echo $similarJSON;} else {echo "null";} ?>;
             document.getElementById("iframeSeller").srcdoc = sellerJSON;
-            document.getElementById("divDetail").innerHTML = generateDetailHTML(detailJSON);
             document.getElementById("divSimilar").innerHTML = generateSimilarHTML(similarJSON);
+            document.getElementById("divDetail").innerHTML = generateDetailHTML(detailJSON);
+
         }
     }
 
@@ -835,6 +860,19 @@ similarRequest($itemId);
 
     function generateSearchHTML(jsonObj) {
 
+        if (jsonObj.Ack == 'Failure') {
+            search_text = "<div style='margin:auto;width:1000px;background-color:rgb(220,220,220);border:2px solid grey'>";
+            search_text += "<p style='margin:0px;text-align:center;font-size:22px;'>" + jsonObj.ErrorMessage + "</p>";
+            search_text += "</div>";
+            return search_text;
+        }
+        if (jsonObj.Item.length == 0) {
+            search_text = "<div style='margin:auto;width:1000px;background-color:rgb(220,220,220);border:2px solid grey'>";
+            search_text += "<p style='margin:0px;text-align:center;font-size:22px;'>No Records has been found</p>";
+            search_text += "</div>";
+            return search_text;
+        }
+
         root = jsonObj.DocumentElement;
         search_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
         search_text += "<table id='searchTable' >";
@@ -843,7 +881,7 @@ similarRequest($itemId);
         // output the headers
         var searchHeader = jsonObj.Header;
         for (i = 0; i < searchHeader.length; i++) {
-            search_text += "<th>" + searchHeader[i] + "</th>";
+            search_text += "<th nowrap>" + searchHeader[i] + "</th>";
         }
         search_text += "</tr>";
         // output out the values
@@ -885,9 +923,16 @@ similarRequest($itemId);
     }
 
     function generateDetailHTML(jsonObj) {
+        if (jsonObj.Ack=='Failure') {
+            detail_text = "<div style='margin:auto;width:1000px;background-color:rgb(220,220,220);border:2px solid grey'>";
+            detail_text += "<p style='margin:0px;text-align:center;font-size:22px;'>Invalid or non-existent item ID</p>";
+            detail_text += "</div>";
+            document.getElementById("pageDetail").innerHTML=detail_text;
+            return ;
+        }
         root = jsonObj.DocumentElement;
         detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
-        detail_text = "<H1 style='text-align:center;margin:auto'>Item Details</H1>";
+        detail_text = "<H1 style='text-align:center;margin:auto;font-size:40px'>Item Details</H1>";
         detail_text += "<table id='detailTable'>";
         detail_text += "<tbody>";
         // output out the values
