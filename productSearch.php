@@ -507,7 +507,7 @@ similarRequest($itemId);
         <img id="sellerButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png"
              style="width:40px; height:20px" onclick="clickSeller()">
     </div>
-    <div id="divSeller" name="divSeller" style="display:none">
+    <div id="divSeller" name="divSeller" style="display:">
         <iframe id="iframeSeller" name="iframeSeller" onload="resizeIframe(this)"></iframe>
     </div>
 
@@ -800,9 +800,37 @@ similarRequest($itemId);
         }
     }
 
-    function resizeIframe(obj) {
-        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+
+/*    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 40 + 'px';
+
         document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
+
+        await sleep(100);
+
+        document.getElementById("divSeller").style.display="none";
+    }*/
+
+    function resizeIframe(obj) {
+
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 40 + 'px';
+
+        document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
+
+        document.getElementById("divSeller").style.display="none";
+
+    }
+    function getDocHeight(doc) {
+        doc = doc || document;
+        // stackoverflow.com/questions/1145850/
+        var body = doc.body, html = doc.documentElement;
+        var height = Math.max( body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight );
+        return height;
     }
 
     function generateSearchHTML(jsonObj) {
