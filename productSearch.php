@@ -1,204 +1,4 @@
-<html>
-
-<head>
-    <title>Pruduct Search</title>
-    <style>
-        :root {
-            --bodyWidth: 700px;
-        }
-
-        body {
-            width: var(--siteWidth);
-            margin: 0px;
-            padding: 0px;
-            border: 0px;
-            font-family: Times New Roman;
-        }
-
-        div.mainbox {
-            width: var(--bodyWidth);
-            margin: auto;
-            text-align: center;
-            border-style: solid;
-            border-color: rgb(175, 175, 175);
-        }
-
-        div.title {
-            width: var(--bodyWidth);
-            height: 55px;
-        }
-
-        p.title {
-            margin: 0px;
-            height: 50px;
-            font-style: italic;
-            font-size: 40px;
-            color: black;
-        }
-
-        .divideLine {
-            margin: auto;
-            width: calc(var(--bodyWidth) - 10px);
-            height: 2px;
-            background-color: rgb(175, 175, 175);
-        }
-
-        #form {
-            margin-top: 10px;
-            text-align: left;
-            font-size: 20px;
-            margin-left: 20px;
-            line-height: 40px;
-        }
-
-        input.keywordInput {
-            width: 150px;
-        }
-
-        select.categoryInput {
-            width: 250px;
-        }
-
-        input.checkbox {
-            margin-left: 20px;
-        }
-
-        input.shipping {
-            margin-left: 38px;
-        }
-
-        #milesInput {
-            width: 60px;
-            margin-left: 25px;
-        }
-
-        #milesLabel {
-            margin-left: 0px;
-            color: grey;
-        }
-
-        #hereLabel {
-            font-weight: normal;
-            color: grey;
-        }
-
-        #zipRadio {
-            margin-left: 411px;
-            display: inline-block;
-            vertical-align: top;
-        }
-
-        #zipInput {
-            width: 150px;
-            display: inline-block;
-            vertical-align: top;
-        }
-
-        input[type=submit] {
-            margin-left: 250px;
-        }
-        #divSearch {
-            margin:auto;
-            width:1400px;
-            margin-top:100px;
-        }
-        #divDetail {
-            margin: auto;
-            margin-top:100px;
-            width: 800px;
-        }
-        #sellerButton {
-            width:300px;
-            height:300px;
-            background-color:blue;
-            margin:auto;
-        }
-        #divSeller{
-            margin:auto;
-            width:1600px;
-        }
-        #iframeSeller {
-            width:1600px;
-            height : 300px;
-            outline: dotted;
-            overflow-x: hidden;
-        }
-        #similarButton {
-            width:300px;
-            height:300px;
-            background-color:red;
-            margin:auto;
-        }
-
-        #divSimilar {
-            margin:auto;
-            margin: auto;
-            margin-top:100px;
-            width: 1000px;
-            overflow:auto;
-            border: 2px solid rgb(200, 200, 200);
-        }
-
-        #searchTable {
-            width: 1400px;
-            border-collapse: collapse;
-        }
-
-        #detailTable {
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 2px solid rgb(200, 200, 200);
-            font-size: 20px;
-        }
-
-        #divSimilar td {
-            border:none;
-            padding-left:20px;
-            padding-right:20px;
-        }
-        #similarTable {
-            border:none;
-        }
-        img {
-            width: 100px;
-        }
-
-        .detailRefrence {
-            cursor: pointer;
-
-        }
-
-        .detailRefrence:hover {
-            color:grey;
-
-        }
-
-    </style>
-</head>
-
-<body onload="getLocation();loadPage()">
-<script>
-    function getLocation() {
-        var s = document.createElement("script");
-        s.src = "http://ip-api.com/json/?callback=setLocation";
-        document.body.appendChild(s);
-        setLocation(s);
-    }
-
-    var zip;
-
-    function setLocation(json) {
-        zip = json.zip;
-        document.getElementById("submitButton").removeAttribute("disabled");
-        document.getElementById("hereRadio").setAttribute("value", zip);
-    }
-
-</script>
-
 <?php
-/**/
 function searchRequest()
 {
     global $form;
@@ -453,8 +253,8 @@ if (isset($_POST["keywords"])) {
     //echo($itemJSON);
 }
 $itemId = null;
-if (isset($_POST["itemId"]) && $_POST["itemId"] != '') {
-    $itemId = $_POST["itemId"];
+if (isset($_POST["itemIdInput"]) && $_POST["itemIdInput"] != '') {
+    $itemId = $_POST["itemIdInput"];
 } else {
     $itemId = '233153942491';
 }
@@ -468,18 +268,201 @@ detailRequest($itemId);
 detailProcess();
 similarRequest($itemId);
 similarProcess();
-var_dump($_POST);
+//var_dump($_POST);
 ?>
 
-<div class="mainbox">
-    <div class="title">
-        <p class="title">Product Search</p>
+<html>
+
+<head>
+    <title>Pruduct Search</title>
+    <style>
+        :root {
+            --bodyWidth: 700px;
+        }
+
+        body {
+            width: var(--siteWidth);
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+            font-family: Times New Roman;
+        }
+
+        div.mainPage {
+            width: var(--bodyWidth);
+            margin: auto;
+            text-align: center;
+            border-style: solid;
+            border-color: rgb(175, 175, 175);
+        }
+
+        div.pageTitle {
+            width: var(--bodyWidth);
+            height: 55px;
+        }
+
+        p.pageTitle {
+            margin: 0px;
+            height: 50px;
+            font-style: italic;
+            font-size: 40px;
+            color: black;
+        }
+
+        .divideLine {
+            margin: auto;
+            width: calc(var(--bodyWidth) - 10px);
+            height: 2px;
+            background-color: rgb(175, 175, 175);
+        }
+
+        #myForm {
+            margin-top: 10px;
+            text-align: left;
+            font-size: 20px;
+            margin-left: 20px;
+            line-height: 40px;
+        }
+
+        input.keywordInput {
+            width: 150px;
+        }
+
+        select.categoryInput {
+            width: 250px;
+        }
+
+        input.checkbox {
+            margin-left: 20px;
+        }
+
+        input.shipping {
+            margin-left: 38px;
+        }
+
+        #milesInput {
+            width: 60px;
+            margin-left: 25px;
+        }
+
+        #milesLabel {
+            margin-left: 0px;
+            color: grey;
+        }
+
+        #hereLabel {
+            font-weight: normal;
+            color: grey;
+        }
+
+        #zipRadio {
+            margin-left: 411px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #zipInput {
+            width: 150px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        input[type=submit] {
+            margin-left: 250px;
+        }
+        #divSearch {
+            margin:auto;
+            width:1400px;
+            margin-top:100px;
+        }
+        #divDetail {
+            margin: auto;
+            margin-top:100px;
+            width: 800px;
+        }
+        #sellerButton {
+            width:300px;
+            height:100px;
+            margin:auto;
+        }
+        #divSeller{
+            margin:auto;
+            width:1600px;
+            height:300px;
+        }
+        #iframeSeller {
+            margin:0px;
+            padding:0px;
+            width:1600px;
+            height : 300px;
+            outline: dotted;
+            overflow-x: hidden;
+        }
+        #similarButton {
+            width:300px;
+            height:100px;
+            margin:auto;
+        }
+
+        #divSimilar {
+            margin:auto;
+            margin: auto;
+            width: 1000px;
+            overflow:auto;
+            border: 2px solid rgb(200, 200, 200);
+
+        }
+
+        #searchTable {
+            width: 1400px;
+            border-collapse: collapse;
+        }
+
+        #detailTable {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 2px solid rgb(200, 200, 200);
+            font-size: 20px;
+        }
+
+        #divSimilar td {
+            border:none;
+            padding-left:20px;
+            padding-right:20px;
+        }
+        #similarTable {
+            border:none;
+        }
+        img {
+            width: 100px;
+        }
+
+        .detailRefrence {
+            cursor: pointer;
+
+        }
+
+        .detailRefrence:hover {
+            color:grey;
+
+        }
+
+    </style>
+</head>
+
+<body onload="loadPage()">
+
+<div class="mainPage">
+    <div class="pageTitle">
+        <p class="pageTitle">Product Search</p>
     </div>
     <div class="divideLine"></div>
-    <form id="form" name="myform" method="POST">
+    <form id="myForm" name="myForm" method="POST">
         <b>Keyword</b>
         <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100" value="iPhone" required/>
-        <input id="itemId" class="itemId" name="itemId" type="text" maxlength="255" size="100" style="display:none" value="" >
+        <input id="itemIdInput" class="itemIdInput" name="itemIdInput" type="text" maxlength="255" size="100" style="display:none" value="" disabled>
         <br/>
         <b>Category</b>
         <select class="categoryInput" name="category">
@@ -512,25 +495,34 @@ var_dump($_POST);
         <id id="hereLabel">Here</id>
         <br>
         <input id="zipRadio" type="radio" name="zipRadio" value="" onclick="clickZip()" disabled>
-        <input id="zipInput" type="text" name="zipInput" maxlength="5" placeholder="zipcode" disabled required>
+        <input id="zipInput" type="text" name="zipInput" maxlength="5" placeholder="zip code" disabled required>
         <br/>
         <input id="submitButton" type="submit" value="Search" disabled>
         <input type="reset" value="Clear">
     </form>
 
 </div>
-<div id="divSearch" name="divSearch"></div>
-<div id="divDetail" name="divDetail"></div>
-<div id="sellerButton" name="sellerButton">
-    <p></p>
-    <img>
-</div>
-<div id="divSeller" name="divSeller">
-    <iframe id="iframeSeller" name="iframeSeller" ></iframe>
+<div id="pageSearch" name="pageSearch" style="display:none">
+    <div id="divSearch" name="divSearch"></div>
 </div>
 
-<div id="similarButton" name="similarButton"></div>
-<div id="divSimilar" name="divSimilar"></div>
+<div id="pageDetail" name="detailPage" style="display:none">
+    <div id="divDetail" name="divDetail"></div>
+    <div id="sellerButton" name="sellerButton" style="text-align: center; outline:dotted" onclick="clickSeller()" data-checked="false">
+        <p id="sellerButtonText" style="color:grey">click to show seller message</p>
+        <img id="sellerButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png" style="width:40px; height:20px">
+    </div>
+    <div id="divSeller" name="divSeller" style="display:none">
+        <iframe id="iframeSeller" name="iframeSeller" onload="resizeIframe(this)"></iframe>
+    </div>
+
+    <div id="similarButton" name="similarButton" style="text-align: center; outline:dotted" onclick="clickSimilar()" data-checked="false">
+        <p id="similarButtonText" style="color:grey">click to show similar message</p>
+        <img id="similarButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png" style="width:40px; height:20px">
+    </div>
+    <div id="divSimilar" name="divSimilar" style="display:none"></div>
+</div>
+
 
 
 
@@ -622,6 +614,7 @@ var_dump($_POST);
             document.getElementById("zipInput").setAttribute("disabled", "disabled");
             document.getElementById("hereRadio").setAttribute("checked", "true");
             document.getElementById("zipRadio").checked = false;
+            document.getElementById("zipInput").setAttribute("value", "");
     }
 
     function clickZip() {
@@ -631,13 +624,75 @@ var_dump($_POST);
     }
 
     function clickDetail(string) {
-        document.getElementById("itemId").value=string;
-        document.getElementById("form").submit();
+        document.getElementById("itemIdInput").disabled=false;
+        document.getElementById("itemIdInput").value=string;
+        document.getElementById("myForm").submit();
+    }
+
+
+    function clickSeller() {
+        if (document.getElementById("sellerButton").getAttribute("data-checked")=="false") {
+            showSeller();
+            hideSimilar();
+        } else {
+            hideSeller();
+        }
+    }
+    function clickSimilar() {
+        if (document.getElementById("similarButton").getAttribute("data-checked")=="false") {
+            showSimilar();
+            hideSeller();
+        } else {
+            hideSimilar();
+        }
+    }
+
+    function showSeller() {
+        document.getElementById("sellerButton").setAttribute("data-checked", "true");
+        document.getElementById("sellerButtonText").innerHTML="click to hide seller message";
+        document.getElementById("sellerButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_up.png";
+        document.getElementById("divSeller").style.display="";
+    }
+    function hideSeller() {
+        document.getElementById("sellerButton").setAttribute("data-checked", "false");
+        document.getElementById("sellerButtonText").innerHTML="click to show seller message";
+        document.getElementById("sellerButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_down.png";
+        document.getElementById("divSeller").style.display="none";
+    }
+    function showSimilar() {
+        document.getElementById("similarButton").setAttribute("data-checked", "true");
+        document.getElementById("similarButtonText").innerHTML="click to hide similar message";
+        document.getElementById("similarButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_up.png";
+        document.getElementById("divSimilar").style.display="";
+    }
+    function hideSimilar() {
+        document.getElementById("similarButton").setAttribute("data-checked", "false");
+        document.getElementById("similarButtonText").innerHTML="click to show similar message";
+        document.getElementById("similarButtonArrow").src="http://csci571.com/hw/hw6/images/arrow_down.png";
+        document.getElementById("divSimilar").style.display="none";
+    }
+    function getLocation() {
+        var s = document.createElement("script");
+        s.src = "http://ip-api.com/json/?callback=setLocation";
+        document.body.appendChild(s);
+
+    }
+
+    function setLocation(json){
+        var zip=json.zip
+        document.getElementById("submitButton").removeAttribute("disabled");
+        document.getElementById("hereRadio").setAttribute("value", zip);
     }
     function loadPage() {
+        getLocation();
         loadForm();
-        drawSearch();
-        drawDetail();
+        if (<?php if (isset($form["itemIdInput"])) {echo "true";} else {echo "false";} ?>) {
+            drawDetail();
+            document.getElementById("pageDetail").style.display="";
+        } else {
+            drawSearch();
+            document.getElementById("pageSearch").style.display="";
+        }
     }
 
     function drawSearch() {
@@ -646,7 +701,6 @@ var_dump($_POST);
             document.getElementById("divSearch").innerHTML = generateSearchHTML(itemJSON);
         }
     }
-
 
     function drawDetail() {
         detailJSON = <?php echo $detailJSON;?>;
@@ -661,11 +715,13 @@ var_dump($_POST);
 
     }
 
+    function resizeIframe(obj) {
+/*        obj.style.height = obj.contentWindow.document.body.scrollHeight + 4 + 'px';
+        document.getElementById("divSeller").height = obj.style.height;*/
+    }
 
 
     function generateSearchHTML(jsonObj) {
-
-        itemId_search = [];
 
         root = jsonObj.DocumentElement;
         search_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
@@ -718,9 +774,6 @@ var_dump($_POST);
     }
 
     function generateDetailHTML(jsonObj) {
-
-
-
         root = jsonObj.DocumentElement;
         detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
         detail_text = "<H1 style='text-align:center;margin:auto'>Item Details</H1>";
