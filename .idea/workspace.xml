@@ -13,16 +13,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="449">
-              <caret line="82" column="1" lean-forward="true" selection-start-line="82" selection-start-column="1" selection-end-line="82" selection-end-column="1" />
+            <state relative-caret-position="432">
+              <caret line="247" column="10" lean-forward="true" selection-start-line="247" selection-start-column="10" selection-end-line="247" selection-end-column="10" />
               <folding>
-                <element signature="n#searchProcess#0;n#!!top" />
-                <element signature="n#detailRequest#0;n#!!top" />
-                <element signature="n#detailProcess#0;n#!!top" />
-                <element signature="n#similarRequest#0;n#!!top" />
-                <element signature="n#similarProcess#0;n#!!top" />
-                <element signature="n#initialForm#0;n#!!top" />
                 <element signature="n#head#0;n#html#0;n#!!top" />
+                <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
                 <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
@@ -37,11 +32,9 @@
                 <element signature="n#style#0;n#img#0;n#div#3;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#4;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="e#19876#20479#0#HTML" />
-                <element signature="e#20501#24621#0#HTML" />
                 <element signature="e#23556#25123#0#HTML" />
                 <element signature="e#25150#25465#0#HTML" />
                 <element signature="e#25491#25722#0#HTML" />
-                <element signature="e#25757#25928#0#HTML" />
                 <element signature="e#25958#26164#0#HTML" />
                 <element signature="e#26193#26401#0#HTML" />
                 <element signature="e#26429#26785#0#HTML" />
@@ -50,7 +43,6 @@
                 <element signature="e#27592#27960#0#HTML" />
                 <element signature="e#27563#27723#0#HTML" />
                 <element signature="e#27755#27937#0#HTML" />
-                <element signature="e#29122#29289#0#HTML" />
                 <element signature="e#29333#31567#0#HTML" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="e#31610#34721#0#HTML" />
@@ -69,15 +61,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>condition1</find>
-      <find>milesinput</find>
-      <find>onclick</find>
-      <find>ItemId</find>
-      <find>$_POST[&quot;itemId&quot;]</find>
-      <find>&quot;itemId&quot;</find>
-      <find>refrence</find>
-      <find>clickdetail</find>
-      <find>resize</find>
       <find>divSeller</find>
       <find>button</find>
       <find>click</find>
@@ -99,6 +82,15 @@
       <find>enablesearch</find>
       <find>echo</find>
       <find>request</find>
+      <find>iphone</find>
+      <find>onload</find>
+      <find>iframe</find>
+      <find>iframeseller</find>
+      <find>resize</find>
+      <find>searchobj</find>
+      <find>itemJSON</find>
+      <find>sellerJSON</find>
+      <find>clickdetail</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -183,12 +175,12 @@
       <workItem from="1551852520994" duration="2731000" />
       <workItem from="1551900968870" duration="6438000" />
       <workItem from="1551913587898" duration="8929000" />
-      <workItem from="1551926747967" duration="4360000" />
+      <workItem from="1551926747967" duration="10660000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107008000" />
+    <option name="totallyTimeSpent" value="113308000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -251,16 +243,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="82" column="1" lean-forward="true" selection-start-line="82" selection-start-column="1" selection-end-line="82" selection-end-column="1" />
+        <state relative-caret-position="432">
+          <caret line="247" column="10" lean-forward="true" selection-start-line="247" selection-start-column="10" selection-end-line="247" selection-end-column="10" />
           <folding>
-            <element signature="n#searchProcess#0;n#!!top" />
-            <element signature="n#detailRequest#0;n#!!top" />
-            <element signature="n#detailProcess#0;n#!!top" />
-            <element signature="n#similarRequest#0;n#!!top" />
-            <element signature="n#similarProcess#0;n#!!top" />
-            <element signature="n#initialForm#0;n#!!top" />
             <element signature="n#head#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
             <element signature="n#style#0;n#input#1;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
@@ -275,11 +262,9 @@
             <element signature="n#style#0;n#img#0;n#div#3;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#4;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="e#19876#20479#0#HTML" />
-            <element signature="e#20501#24621#0#HTML" />
             <element signature="e#23556#25123#0#HTML" />
             <element signature="e#25150#25465#0#HTML" />
             <element signature="e#25491#25722#0#HTML" />
-            <element signature="e#25757#25928#0#HTML" />
             <element signature="e#25958#26164#0#HTML" />
             <element signature="e#26193#26401#0#HTML" />
             <element signature="e#26429#26785#0#HTML" />
@@ -288,7 +273,6 @@
             <element signature="e#27592#27960#0#HTML" />
             <element signature="e#27563#27723#0#HTML" />
             <element signature="e#27755#27937#0#HTML" />
-            <element signature="e#29122#29289#0#HTML" />
             <element signature="e#29333#31567#0#HTML" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="e#31610#34721#0#HTML" />
