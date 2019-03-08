@@ -13,10 +13,9 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="1037" column="25" lean-forward="true" selection-start-line="1037" selection-start-column="25" selection-end-line="1037" selection-end-column="25" />
+            <state relative-caret-position="450">
+              <caret line="1049" column="23" selection-start-line="1049" selection-start-column="23" selection-end-line="1049" selection-end-column="23" />
               <folding>
-                <element signature="n#style#0;n#div#2;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
@@ -29,17 +28,11 @@
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
               </folding>
@@ -69,7 +62,6 @@
       <find>display</find>
       <find>itemspecific</find>
       <find>namevaluelist</find>
-      <find>resize</find>
       <find>url</find>
       <find>dotted</find>
       <find>iphone</find>
@@ -80,7 +72,8 @@
       <find>shipping1</find>
       <find>shipping</find>
       <find>dump</find>
-      <find>echo</find>
+      <find>1600</find>
+      <find>resize</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -168,11 +161,12 @@
       <workItem from="1551926747967" duration="13507000" />
       <workItem from="1551944891265" duration="5563000" />
       <workItem from="1551995794453" duration="20394000" />
+      <workItem from="1552027086184" duration="3268000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142112000" />
+    <option name="totallyTimeSpent" value="145380000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -234,10 +228,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="1037" column="25" lean-forward="true" selection-start-line="1037" selection-start-column="25" selection-end-line="1037" selection-end-column="25" />
+        <state relative-caret-position="450">
+          <caret line="1049" column="23" selection-start-line="1049" selection-start-column="23" selection-end-line="1049" selection-end-column="23" />
           <folding>
-            <element signature="n#style#0;n#div#2;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
@@ -250,17 +243,11 @@
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#H1#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#td#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
           </folding>
