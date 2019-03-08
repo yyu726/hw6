@@ -919,7 +919,7 @@ similarRequest($itemId);
                     if (search_item[key] == "N/A") {
                         search_text += "<td>" + "</td>";
                     } else {
-                        search_text += "<td><img style='width:100px;max-height:150px;' src='" + search_item[key] + "'></td>";
+                        search_text += "<td style='width:100px'><img style='width:100px;max-height:150px;' src='" + search_item[key] + "'></td>";
                     }
                 } else if (search_item_keys[j] == "ItemId") {
                     continue;
@@ -962,7 +962,7 @@ similarRequest($itemId);
                     for (k = 0; k < detail.ItemSpecifics.NameValueList.length; k++) {
                         detail_text += "<tr>";
                         detail_text += "<td><b>" + detail.ItemSpecifics.NameValueList[k].Name + "</b></td>";
-                        detail_text += "<td>" + detail.ItemSpecifics.NameValueList[k].Value + "</td>";
+                        detail_text += "<td>" + detail.ItemSpecifics.NameValueList[k].Value[0] + "</td>";
                         detail_text += "</tr>";
                     }
                 } else if (key == 'Photo') {
