@@ -13,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/productSearch.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-386">
-              <caret line="74" column="59" lean-forward="true" selection-start-line="74" selection-start-column="59" selection-end-line="74" selection-end-column="59" />
+            <state relative-caret-position="306">
+              <caret line="1037" column="25" lean-forward="true" selection-start-line="1037" selection-start-column="25" selection-end-line="1037" selection-end-column="25" />
               <folding>
                 <element signature="n#style#0;n#div#2;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
@@ -51,19 +51,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mainPage</find>
-      <find>remove</find>
-      <find>enablesearch</find>
-      <find>request</find>
-      <find>iphone</find>
-      <find>onload</find>
-      <find>iframeseller</find>
-      <find>searchobj</find>
-      <find>itemJSON</find>
-      <find>sellerJSON</find>
-      <find>resize</find>
-      <find>divsearch</find>
-      <find>loadform</find>
       <find>similarur</find>
       <find>seller_text</find>
       <find>220</find>
@@ -78,9 +65,22 @@
       <find>resizeiframe</find>
       <find>iframe</find>
       <find>echo</find>
+      <find>clickdetail</find>
+      <find>display</find>
+      <find>itemspecific</find>
+      <find>namevaluelist</find>
+      <find>resize</find>
+      <find>url</find>
+      <find>dotted</find>
+      <find>iphone</find>
+      <find>distance</find>
+      <find>maxdistance</find>
+      <find>milesinput</find>
+      <find>zipradio</find>
+      <find>shipping1</find>
+      <find>shipping</find>
       <find>dump</find>
       <find>echo</find>
-      <find>clickdetail</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -167,16 +167,15 @@
       <workItem from="1551913587898" duration="8929000" />
       <workItem from="1551926747967" duration="13507000" />
       <workItem from="1551944891265" duration="5563000" />
-      <workItem from="1551995794453" duration="10815000" />
+      <workItem from="1551995794453" duration="20394000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="132533000" />
+    <option name="totallyTimeSpent" value="142112000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.39429176" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -235,8 +234,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/productSearch.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-386">
-          <caret line="74" column="59" lean-forward="true" selection-start-line="74" selection-start-column="59" selection-end-line="74" selection-end-column="59" />
+        <state relative-caret-position="306">
+          <caret line="1037" column="25" lean-forward="true" selection-start-line="1037" selection-start-column="25" selection-end-line="1037" selection-end-column="25" />
           <folding>
             <element signature="n#style#0;n#div#2;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
