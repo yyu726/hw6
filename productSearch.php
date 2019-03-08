@@ -15,6 +15,7 @@ function searchRequest()
         'CTN' => '58058', 'HB' => '26395', 'Music' => '11233', 'VGC' => '1249');
     $categoryId = $categoryArray[$form["category"]];
     $buyerPostalCode = null;
+    $MaxDistance = '10';
     if (isset($form["nearbySearch"])) {
         if (isset($form["hereRadio"])) {
             $buyerPostalCode = $form["hereRadio"];
@@ -22,8 +23,10 @@ function searchRequest()
         if (isset($form["zipInput"])) {
             $buyerPostalCode = $form["zipInput"];
         }
+        if ($form["distance"] != '') {
+            $MaxDistance = $form["distance"];
+        }
     }
-    $MaxDistance = isset($form["nearbySearch"]) ? $form["distance"] : NULL;
     $LocalPickupOnly = isset($form["shipping1"]) ? "true" : NULL;
     $FreeShippingOnly = isset($form["shipping2"]) ? "true" : NULL;
     $Condition = null;
@@ -47,15 +50,17 @@ function searchRequest()
     if (isset($categoryId)) {
         $searchURL = $searchURL . "&categoryId=" . $categoryId;
     }
+
+    $filterCount = 0;
     if (isset($buyerPostalCode)) {
         $searchURL = $searchURL . "&buyerPostalCode=" . $buyerPostalCode;
+        if (isset($MaxDistance)) {
+            $searchURL = $searchURL . "&itemFilter($filterCount).name=MaxDistance";
+            $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $MaxDistance;
+            $filterCount++;
+        }
     }
-    $filterCount = 0;
-    if (isset($MaxDistance)) {
-        $searchURL = $searchURL . "&itemFilter($filterCount).name=MaxDistance";
-        $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $MaxDistance;
-        $filterCount++;
-    }
+
     if (isset($FreeShippingOnly)) {
         $searchURL = $searchURL . "&itemFilter($filterCount).name=FreeShippingOnly";
         $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $FreeShippingOnly;
@@ -66,7 +71,7 @@ function searchRequest()
         $searchURL = $searchURL . "&itemFilter($filterCount).value=" . $LocalPickupOnly;
         $filterCount++;
     }
-    $searchURL = $searchURL . "&itemFilter($filterCount).name=HideDuplicateItem";
+    $searchURL = $searchURL . "&itemFilter($filterCount).name=HideDuplicateItems";
     $searchURL = $searchURL . "&itemFilter($filterCount).value=true";
     $filterCount++;
     if (!is_null($Condition)) {
@@ -81,9 +86,7 @@ function searchRequest()
     $searchObj = json_decode($searchText);
 
     searchProcess($searchObj);
-    //echo $searchURL;
-    //echo $searchText;
-    //var_dump($searchText);
+
 }
 
 function searchProcess($searchObj)
@@ -105,7 +108,7 @@ function searchProcess($searchObj)
             $itemJSON['ErrorMessage'] = 'Invalid Input. Search Failed.';
         }
         $itemJSON = json_encode($itemJSON);
-        //var_dump($itemJSON);
+
         return;
     } else {
         $itemJSON['Ack'] = 'Success';
@@ -140,7 +143,7 @@ function searchProcess($searchObj)
     $itemJSON['Header'] = array('Index', 'Photo', 'Name', 'Price', 'Zip code', 'Condition', 'Shipping Option');
     $itemJSON['Item'] = $item;
     $itemJSON = json_encode($itemJSON);
-    //var_dump($itemJSON);
+
 }
 
 function detailRequest($itemId)
@@ -163,9 +166,8 @@ function detailRequest($itemId)
     $detailURL = $detailURL . '&version=' . $version;
     $detailURL = $detailURL . '&ItemID=' . $itemId;
     $detailURL = $detailURL . '&IncludeSelector=' . $IncludeSelector;
-    //echo $detailURL;
+
     $detailText = file_get_contents($detailURL);
-    //var_dump($detailText);
 
     $detailObj = json_decode($detailText);
 
@@ -194,20 +196,21 @@ function detailProcess($detailObj)
         $detail[0]['Location'] = isset($detailObj->{'Item'}->{'Location'}) ? $detailObj->{'Item'}->{'Location'} : 'N/A';
         $detail[0]['PostalCode'] = isset($detailObj->{'Item'}->{'PostalCode'}) ? $detailObj->{'Item'}->{'PostalCode'} : 'N/A';
         $detail[0]['Seller'] = isset($detailObj->{'Item'}->{'Seller'}->{'UserID'}) ? $detailObj->{'Item'}->{'Seller'}->{'UserID'} : 'N/A';
-        $detail_returnaccpted = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'} : 'N/A';
-        $detail_returnwithin = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? ' Within ' . $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
-        if ($detail_returnaccpted == 'N/A' && $detail_returnwithin == 'N/A') {
+        $detail_return_accepted = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'}) ? $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsAccepted'} : 'N/A';
+        $detail_return_within = isset($detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'}) ? ' Within ' . $detailObj->{'Item'}->{'ReturnPolicy'}->{'ReturnsWithin'} : 'N/A';
+        if ($detail_return_accepted == 'N/A' && $detail_return_within == 'N/A') {
             $detail[0]['ReturnPolicy'] = 'N/A';
+        } else if ($detail_return_accepted != 'N/A' && $detail_return_within == 'N/A') {
+            $detail[0]['ReturnPolicy'] = $detail_return_accepted;
         } else {
-            $detail[0]['ReturnPolicy'] = $detail_returnaccpted . $detail_returnwithin;
+            $detail[0]['ReturnPolicy'] = $detail_return_accepted . $detail_return_within;
         }
-        $detail[0]['ItemSpecifics'] = isset($detailObj->{'Item'}->{'ItemSpecifics'}) ? $detailObj->{'Item'}->{'ItemSpecifics'} : array();
+        $detail[0]['ItemSpecifics'] = isset($detailObj->{'Item'}->{'ItemSpecifics'}->{'NameValueList'}) ? $detailObj->{'Item'}->{'ItemSpecifics'}->{'NameValueList'} : array();
     }
     global $sellerJSON;
     global $detailJSON;
     $sellerJSON = json_encode($seller);
     $detailJSON = json_encode($detail);
-    //var_dump($detailJSON);
 
 }
 
@@ -231,9 +234,8 @@ function similarRequest($itemId)
     $similarURL = $similarURL . '&REST-PAYLOAD';
     $similarURL = $similarURL . '&itemId=' . $itemId;
     $similarURL = $similarURL . '&maxResults=' . $maxResults;
-    echo $similarURL;
+
     $similarText = file_get_contents($similarURL);
-    //var_dump($similarText);
 
     $similarObj = json_decode($similarText);
 
@@ -250,26 +252,15 @@ function similarProcess($similarObj)
         $similar[$i]['Title'] = isset($similarItem[$i]->{'title'}) ? $similarItem[$i]->{'title'} : 'N/A';
         $similar[$i]['Photo'] = isset($similarItem[$i]->{'imageURL'}) ? $similarItem[$i]->{'imageURL'} : 'N/A';
         $similar[$i]['Price'] = isset($similarItem[$i]->{'buyItNowPrice'}->{'__value__'}) ? '$' . $similarItem[$i]->{'buyItNowPrice'}->{'__value__'} : 'N/A';
-    }
-/*    $similar = null;
-    if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Failure') {
-        $similar = array();
-    }
-    if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Success') {
-        $similar = array();
-        $similarItem = $similarObj->{'getSimilarItemsResponse'}->{'itemRecommendations'}->{'item'};
-        for ($i = 0; $i < count($similarItem); $i++) {
-            $similar[$i]['ItemID'] = isset($similarItem[$i]->{'itemId'}) ? $similarItem[$i]->{'itemId'} : 'N/A';
-            $similar[$i]['Title'] = isset($similarItem[$i]->{'title'}) ? $similarItem[$i]->{'title'} : 'N/A';
-            $similar[$i]['Photo'] = isset($similarItem[$i]->{'imageURL'}) ? $similarItem[$i]->{'imageURL'} : 'N/A';
-            $similar[$i]['Price'] = isset($similarItem[$i]->{'buyItNowPrice'}->{'__value__'}) ? 'USD' . $similarItem[$i]->{'buyItNowPrice'}->{'__value__'} : 'N/A';
+        if ($similar[$i]['Price'] == '$0.00' && isset($similarItem[$i]->{'currentPrice'}->{'__value__'})) {
+            $similar[$i]['Price'] = '$' . $similarItem[$i]->{'currentPrice'}->{'__value__'};
         }
-    }*/
+    }
+
     global $similarJSON;
     $similarJSON = json_encode($similar);
-    //var_dump($similarJSON);
-}
 
+}
 
 $form = isset($_POST["keywords"]) ? $_POST : null;
 $itemJSON = null;
@@ -280,7 +271,6 @@ $sellerJSON = null;
 $similarJSON = null;
 detailRequest($itemId);
 similarRequest($itemId);
-//var_dump($_POST);
 
 ?>
 
@@ -294,11 +284,14 @@ similarRequest($itemId);
         }
 
         body {
-            width: var(--siteWidth);
             margin: 0px;
             padding: 0px;
             border: 0px;
             font-family: Times New Roman;
+        }
+
+        body {
+            width: var(--siteWidth);
         }
 
         div.divForm {
@@ -351,7 +344,7 @@ similarRequest($itemId);
         }
 
         input.shipping {
-            margin-left: 38px;
+            margin-left: 36px;
         }
 
         #milesInput {
@@ -370,7 +363,7 @@ similarRequest($itemId);
         }
 
         #zipRadio {
-            margin-left: 411px;
+            margin-left: 408px;
             display: inline-block;
             vertical-align: top;
         }
@@ -417,7 +410,7 @@ similarRequest($itemId);
             padding: 0px;
             width: 1600px;
             height: 300px;
-            outline: dotted;
+
             overflow-x: hidden;
             border:none;
         }
@@ -486,7 +479,7 @@ similarRequest($itemId);
     <form id="myForm" name="myForm" method="POST">
         <b>Keyword</b>
         <input id="keywordInput" class="keywordInput" type="text" name="keywords" maxlength="255" size="100"
-               value="iPhone" required/>
+               value="" required/>
         <input id="itemIdInput" class="itemIdInput" name="itemIdInput" type="text" maxlength="255" size="100"
                style="display:none" value="" disabled>
         <br/>
@@ -514,8 +507,8 @@ similarRequest($itemId);
         <br/>
         <input id="nearbySearch" class="nearbySearch" type="checkbox" name="nearbySearch" value="enabled"
                onchange="enableSearch(this)"><b>Enable Nearby Search</b>
-        <input id="milesInput" type="text" name="distance" maxlength="255" size="100" placeholder="10" value="10"
-               disabled required>
+        <input id="milesInput" type="text" name="distance" maxlength="255" size="100" placeholder="10" value=""
+               disabled>
         <b id="milesLabel">miles from</b>
         <input id="hereRadio" type="radio" name="hereRadio" value="Here" checked disabled onclick="clickHere()">
         <id id="hereLabel">Here</id>
@@ -554,7 +547,7 @@ similarRequest($itemId);
 
 <script type="text/javascript">
     function clearPage() {
-        document.getElementById("keywordInput").setAttribute("value", "iPhone");
+        document.getElementById("keywordInput").setAttribute("value", "");
 
         document.getElementById("All").removeAttribute("selected");
         document.getElementById("Art").removeAttribute("selected");
@@ -580,7 +573,7 @@ similarRequest($itemId);
         document.getElementById("hereRadio").setAttribute("disabled", "disabled");
         document.getElementById("milesLabel").setAttribute("style", "color: grey");
         document.getElementById("hereLabel").setAttribute("style", "color: grey");
-        document.getElementById("milesInput").setAttribute("value", "10");
+        document.getElementById("milesInput").setAttribute("value", "");
         document.getElementById("hereRadio").checked = true;
         document.getElementById("zipRadio").removeAttribute("checked");
         document.getElementById("zipInput").setAttribute("value", "");
@@ -668,13 +661,13 @@ similarRequest($itemId);
             document.getElementById("nearbySearch").setAttribute("checked", "true");
             enableSearch(document.getElementById("nearbySearch"));
         }
-        if (<?php if (isset($form["distance"])) {
+        if (<?php if (isset($_POST["distance"])) {
             echo "true";
         } else {
             echo "false";
         } ?>) {
-            document.getElementById("milesInput").setAttribute("value", "<?php if (isset($form["distance"])) {
-                echo $form["distance"];
+            document.getElementById("milesInput").setAttribute("value", "<?php if (isset($_POST["distance"]) && $_POST["distance"] != '') {
+                echo $_POST["distance"];
             } else {
                 echo '';
             }?>");
@@ -729,7 +722,7 @@ similarRequest($itemId);
             document.getElementById("milesLabel").setAttribute("style", "color: grey");
             document.getElementById("hereLabel").setAttribute("style", "color: grey");
 
-            document.getElementById("milesInput").setAttribute("value", "10");
+            document.getElementById("milesInput").setAttribute("value", "");
             document.getElementById("hereRadio").checked = true;
             document.getElementById("zipRadio").checked = false;
             document.getElementById("zipInput").setAttribute("value", "");
@@ -831,47 +824,15 @@ similarRequest($itemId);
         }
     }
 
-
-/*    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function resizeIframe(obj) {
-
-        document.getElementById("divSeller").style.display="";
-
-        obj.style.height ='';
-
-        await sleep(500);
-
-        obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 40 + 'px';
-
-        await sleep(500);
-
-        document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
-
-        await sleep(500);
-
-        document.getElementById("divSeller").style.display="none";
-    }*/
-
     function resizeIframe(obj) {
         document.getElementById("divSeller").style.display="";
 
-        obj.style.height = obj.contentWindow.document.body.scrollHeight + 40 + 'px';
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 32 + 'px';
 
         document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
 
         document.getElementById("divSeller").style.display="none";
 
-    }
-    function getDocHeight(doc) {
-        doc = doc || document;
-        // stackoverflow.com/questions/1145850/
-        var body = doc.body, html = doc.documentElement;
-        var height = Math.max( body.scrollHeight, body.offsetHeight,
-            html.clientHeight, html.scrollHeight, html.offsetHeight );
-        return height;
     }
 
     function generateSearchHTML(jsonObj) {
@@ -894,18 +855,18 @@ similarRequest($itemId);
         search_text += "<table id='searchTable' >";
         search_text += "<tbody>";
         search_text += "<tr>";
-        // output the headers
+
         var searchHeader = jsonObj.Header;
         for (i = 0; i < searchHeader.length; i++) {
             search_text += "<th nowrap>" + searchHeader[i] + "</th>";
         }
         search_text += "</tr>";
-        // output out the values
+
         var search_items = jsonObj.Item;
-        for (i = 0; i < search_items.length; i++) //do for all films (one per row)
+        for (i = 0; i < search_items.length; i++)
         {
-            search_item = search_items[i]; //get properties of a film (an object)
-            search_text += "<tr>";      //start a new row of the output table
+            search_item = search_items[i];
+            search_text += "<tr>";
             search_item_keys = Object.keys(search_item);
             for (j = 0; j < search_item_keys.length; j++) {
                 key = search_item_keys[j];
@@ -915,7 +876,7 @@ similarRequest($itemId);
                         search_text += '$';
                     }
                     search_text += search_item[key].Value + "</td>";
-                } else if (search_item_keys[j] == "Photo") {//handle images separately
+                } else if (search_item_keys[j] == "Photo") {
                     if (search_item[key] == "N/A") {
                         search_text += "<td>" + "</td>";
                     } else {
@@ -950,19 +911,19 @@ similarRequest($itemId);
         detail_text = "<H1 style='text-align:center;margin:auto;font-size:40px'>Item Details</H1>";
         detail_text += "<table id='detailTable'>";
         detail_text += "<tbody>";
-        // output out the values
-        for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
+
+        for (i = 0; i < jsonObj.length; i++)
         {
-            detail = jsonObj[i]; //get properties of a film (an object)
-            //start a new row of the output table
+            detail = jsonObj[i];
+
             detail_keys = Object.keys(detail);
             for (j = 0; j < detail_keys.length; j++) {
                 key = detail_keys[j];
                 if (key == 'ItemSpecifics') {
-                    for (k = 0; k < detail.ItemSpecifics.NameValueList.length; k++) {
+                    for (k = 0; k < detail.ItemSpecifics.length; k++) {
                         detail_text += "<tr>";
-                        detail_text += "<td><b>" + detail.ItemSpecifics.NameValueList[k].Name + "</b></td>";
-                        detail_text += "<td>" + detail.ItemSpecifics.NameValueList[k].Value[0] + "</td>";
+                        detail_text += "<td><b>" + detail.ItemSpecifics[k].Name + "</b></td>";
+                        detail_text += "<td>" + detail.ItemSpecifics[k].Value[0] + "</td>";
                         detail_text += "</tr>";
                     }
                 } else if (key == 'Photo') {
@@ -990,6 +951,8 @@ similarRequest($itemId);
                         detail_text += "<td>" + detail['Location'] + "</td>";
                         detail_text += "</tr>";
                     }
+                } else if (key == 'PostalCode'){
+
                 } else {
                     if (detail[key] != 'N/A') {
                         detail_text += "<tr>";
@@ -1029,12 +992,12 @@ similarRequest($itemId);
         similar_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
         similar_text += "<table id='similarTable'>";
         similar_text += "<tbody>";
-        // output out the values
+
         similar_text += "<tr>";
-        for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
+        for (i = 0; i < jsonObj.length; i++)
         {
-            similar = jsonObj[i]; //get properties of a film (an object)
-            //start a new row of the output table
+            similar = jsonObj[i];
+
             similar_text += "<td>";
 
             if (similar['Photo'] != 'N/A') {
@@ -1048,10 +1011,10 @@ similarRequest($itemId);
         }
         similar_text += "</tr>";
         similar_text += "<tr>";
-        for (i = 0; i < jsonObj.length; i++) //do for all films (one per row)
+        for (i = 0; i < jsonObj.length; i++)
         {
-            similar = jsonObj[i]; //get properties of a film (an object)
-            //start a new row of the output table
+            similar = jsonObj[i];
+
             similar_text += "<td style='text-align:center'><b>";
             similar_text += similar['Price'];
             similar_text += "</b></td>";
