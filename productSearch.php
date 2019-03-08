@@ -1,4 +1,5 @@
 <?php
+// yyu726 Version 3.0
 function searchRequest()
 {
     global $form;
@@ -401,14 +402,14 @@ similarRequest($itemId);
 
         #divSeller {
             margin: auto;
-            width: 1600px;
+            width: 1040px;
             height: auto;
         }
 
         #iframeSeller {
             margin: 0px;
             padding: 0px;
-            width: 1600px;
+            width: 1040px;
             height: 300px;
 
             overflow-x: hidden;
@@ -827,9 +828,12 @@ similarRequest($itemId);
     function resizeIframe(obj) {
         document.getElementById("divSeller").style.display="";
 
-        obj.style.height = obj.contentWindow.document.body.scrollHeight + 32 + 'px';
-
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 48 + 'px';
+        //obj.style.width = obj.contentWindow.document.body.scrollWidth + 48 + 'px';
+        //obj.style.height = obj.contentWindow.getComputedStyle(obj.contentDocument.documentElement).height;
+        //obj.style.width = obj.contentWindow.getComputedStyle(obj.contentDocument.documentElement).width;
         document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
+        document.getElementById("divSeller").style.width = document.getElementById("iframeSeller").style.width;
 
         document.getElementById("divSeller").style.display="none";
 
@@ -872,9 +876,9 @@ similarRequest($itemId);
                 key = search_item_keys[j];
                 if (key == 'Price') {
                     search_text += "<td>"
-                    if (search_item[key].Currency == "USD") {
+
                         search_text += '$';
-                    }
+
                     search_text += search_item[key].Value + "</td>";
                 } else if (search_item_keys[j] == "Photo") {
                     if (search_item[key] == "N/A") {
@@ -1043,7 +1047,7 @@ similarRequest($itemId);
         }
     }
 </script>
-
+<!-- yyu726 Version 3.0 -->
 </body>
 
 </html>
