@@ -307,6 +307,7 @@ similarRequest($itemId);
             text-align: center;
             border-style: solid;
             border-color: rgb(175, 175, 175);
+            background-color: rgb(250,250,250);
         }
 
         div.formTitle {
