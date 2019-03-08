@@ -231,7 +231,7 @@ function similarRequest($itemId)
     $similarURL = $similarURL . '&REST-PAYLOAD';
     $similarURL = $similarURL . '&itemId=' . $itemId;
     $similarURL = $similarURL . '&maxResults=' . $maxResults;
-    //echo $similarURL;
+    echo $similarURL;
     $similarText = file_get_contents($similarURL);
     //var_dump($similarText);
 
@@ -751,7 +751,7 @@ similarRequest($itemId);
 
     function clickDetail(string) {
         document.getElementById("itemIdInput").disabled = false;
-        document.getElementById("itemIdInput").value = string;
+        document.getElementById("itemIdInput").value = '192475834591';
         document.getElementById("myForm").submit();
     }
 
@@ -941,7 +941,7 @@ similarRequest($itemId);
     function generateDetailHTML(jsonObj) {
         if (jsonObj.Ack == 'Failure') {
             detail_text = "<div style='margin:auto;width:1000px;background-color:rgb(240,240,240);border:2px solid rgb(220,220,220)'>";
-            detail_text += "<p style='margin:0px;text-align:center;font-size:22px;'><b>Invalid or non-existent item ID</b></p>";
+            detail_text += "<p style='margin:0px;text-align:center;font-size:22px;'><b>No Item Detail has been Found due to Invalid or Non-Existent Item ID</b></p>";
             detail_text += "</div>";
             return detail_text ;
         }
