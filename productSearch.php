@@ -751,7 +751,7 @@ similarRequest($itemId);
 
     function clickDetail(string) {
         document.getElementById("itemIdInput").disabled = false;
-        document.getElementById("itemIdInput").value = '192475834591';
+        document.getElementById("itemIdInput").value = string;
         document.getElementById("myForm").submit();
     }
 
