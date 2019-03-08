@@ -36,7 +36,7 @@ function searchRequest()
     if (isset($form["condition3"])) {
         $Condition[] = $form["condition3"];
     }
-    $searchURL = "https://svcs.ebay.com/services/search/FindingService/v1?";
+    $searchURL = "http://svcs.ebay.com/services/search/FindingService/v1?";
     $searchURL = $searchURL . "OPERATION-NAME=" . $OPERATION_NAME;
     $searchURL = $searchURL . "&SERVICE-VERSION=" . $SERVICE_VERSION;
     $searchURL = $searchURL . "&SECURITY-APPNAME=" . $SECURITY_APPNAME;
@@ -163,7 +163,7 @@ function detailRequest($itemId)
     $detailURL = $detailURL . '&version=' . $version;
     $detailURL = $detailURL . '&ItemID=' . $itemId;
     $detailURL = $detailURL . '&IncludeSelector=' . $IncludeSelector;
-    echo $detailURL;
+    //echo $detailURL;
     $detailText = file_get_contents($detailURL);
     //var_dump($detailText);
 
@@ -242,13 +242,21 @@ function similarRequest($itemId)
 
 function similarProcess($similarObj)
 {
-    $similar = null;
+
+    $similar = array();
+    $similarItem = $similarObj->{'getSimilarItemsResponse'}->{'itemRecommendations'}->{'item'};
+    for ($i = 0; $i < count($similarItem); $i++) {
+        $similar[$i]['ItemID'] = isset($similarItem[$i]->{'itemId'}) ? $similarItem[$i]->{'itemId'} : 'N/A';
+        $similar[$i]['Title'] = isset($similarItem[$i]->{'title'}) ? $similarItem[$i]->{'title'} : 'N/A';
+        $similar[$i]['Photo'] = isset($similarItem[$i]->{'imageURL'}) ? $similarItem[$i]->{'imageURL'} : 'N/A';
+        $similar[$i]['Price'] = isset($similarItem[$i]->{'buyItNowPrice'}->{'__value__'}) ? '$' . $similarItem[$i]->{'buyItNowPrice'}->{'__value__'} : 'N/A';
+    }
+/*    $similar = null;
     if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Failure') {
         $similar = array();
     }
     if ($similarObj->{'getSimilarItemsResponse'}->{'ack'} == 'Success') {
         $similar = array();
-
         $similarItem = $similarObj->{'getSimilarItemsResponse'}->{'itemRecommendations'}->{'item'};
         for ($i = 0; $i < count($similarItem); $i++) {
             $similar[$i]['ItemID'] = isset($similarItem[$i]->{'itemId'}) ? $similarItem[$i]->{'itemId'} : 'N/A';
@@ -256,10 +264,10 @@ function similarProcess($similarObj)
             $similar[$i]['Photo'] = isset($similarItem[$i]->{'imageURL'}) ? $similarItem[$i]->{'imageURL'} : 'N/A';
             $similar[$i]['Price'] = isset($similarItem[$i]->{'buyItNowPrice'}->{'__value__'}) ? 'USD' . $similarItem[$i]->{'buyItNowPrice'}->{'__value__'} : 'N/A';
         }
-        global $similarJSON;
-        $similarJSON = json_encode($similar);
-        //var_dump($similarJSON);
-    }
+    }*/
+    global $similarJSON;
+    $similarJSON = json_encode($similar);
+    //var_dump($similarJSON);
 }
 
 
@@ -388,7 +396,7 @@ similarRequest($itemId);
         }
         #divDetail {
             margin: auto;
-            width: 800px;
+
         }
 
         #sellerButton {
@@ -400,7 +408,7 @@ similarRequest($itemId);
         #divSeller {
             margin: auto;
             width: 1600px;
-            height: 300px;
+            height: auto;
         }
 
         #iframeSeller {
@@ -410,6 +418,7 @@ similarRequest($itemId);
             height: 300px;
             outline: dotted;
             overflow-x: hidden;
+            border:none;
         }
 
         #similarButton {
@@ -433,7 +442,9 @@ similarRequest($itemId);
         }
 
         #detailTable {
+            margin:auto;
             border-collapse: collapse;
+            max-width:800px;
         }
 
         table, th, td {
@@ -449,10 +460,6 @@ similarRequest($itemId);
 
         #similarTable {
             border: none;
-        }
-
-        img {
-            width: 100px;
         }
 
         .detailRefrence {
@@ -531,7 +538,7 @@ similarRequest($itemId);
         <img id="sellerButtonArrow" src="http://csci571.com/hw/hw6/images/arrow_down.png"
              style="width:40px; height:20px" onclick="clickSeller()">
     </div>
-    <div id="divSeller" name="divSeller" style="display:">
+    <div id="divSeller" name="divSeller" style="display:none">
         <iframe id="iframeSeller" name="iframeSeller" onload="resizeIframe(this)"></iframe>
     </div>
 
@@ -816,12 +823,10 @@ similarRequest($itemId);
         if (<?php if(isset($detailJSON)) {echo "true";} else {echo "false";} ?>) {
             detailJSON = <?php if(isset($detailJSON)) {echo $detailJSON;} else {echo "null";} ?>;
             sellerJSON = <?php if(isset($sellerJSON)) {echo $sellerJSON;} else {echo "null";} ?>;
-            sellerJSON = sellerJSON["Description"];
             similarJSON = <?php if(isset($similarJSON)) {echo $similarJSON;} else {echo "null";} ?>;
-            document.getElementById("iframeSeller").srcdoc = sellerJSON;
-            document.getElementById("divSimilar").innerHTML = generateSimilarHTML(similarJSON);
             document.getElementById("divDetail").innerHTML = generateDetailHTML(detailJSON);
-
+            generateSellerHTML(sellerJSON);
+            document.getElementById("divSimilar").innerHTML = generateSimilarHTML(similarJSON);
         }
     }
 
@@ -831,16 +836,26 @@ similarRequest($itemId);
     }
 
     async function resizeIframe(obj) {
-        obj.style.height = obj.contentWindow.document.body.scrollHeight + 40 + 'px';
+
+        document.getElementById("divSeller").style.display="";
+
+        obj.style.height ='';
+
+        await sleep(500);
+
+        obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 40 + 'px';
+
+        await sleep(500);
 
         document.getElementById("divSeller").style.height = document.getElementById("iframeSeller").style.height;
 
-        await sleep(100);
+        await sleep(500);
 
         document.getElementById("divSeller").style.display="none";
     }*/
 
     function resizeIframe(obj) {
+        document.getElementById("divSeller").style.display="";
 
         obj.style.height = obj.contentWindow.document.body.scrollHeight + 40 + 'px';
 
@@ -861,13 +876,13 @@ similarRequest($itemId);
     function generateSearchHTML(jsonObj) {
 
         if (jsonObj.Ack == 'Failure') {
-            search_text = "<div style='margin:auto;width:1000px;background-color:rgb(220,220,220);border:2px solid grey'>";
+            search_text = "<div style='margin:auto;width:1000px;background-color:rgb(240,240,240);border:2px solid rgb(220,220,220)'>";
             search_text += "<p style='margin:0px;text-align:center;font-size:22px;'>" + jsonObj.ErrorMessage + "</p>";
             search_text += "</div>";
             return search_text;
         }
         if (jsonObj.Item.length == 0) {
-            search_text = "<div style='margin:auto;width:1000px;background-color:rgb(220,220,220);border:2px solid grey'>";
+            search_text = "<div style='margin:auto;width:1000px;background-color:rgb(240,240,240);border:2px solid rgb(220,220,220)'>";
             search_text += "<p style='margin:0px;text-align:center;font-size:22px;'>No Records has been found</p>";
             search_text += "</div>";
             return search_text;
@@ -903,7 +918,7 @@ similarRequest($itemId);
                     if (search_item[key] == "N/A") {
                         search_text += "<td>" + "</td>";
                     } else {
-                        search_text += "<td><img src='" + search_item[key] + "'></td>";
+                        search_text += "<td><img style='width:100px;max-height:150px;' src='" + search_item[key] + "'></td>";
                     }
                 } else if (search_item_keys[j] == "ItemId") {
                     continue;
@@ -923,12 +938,11 @@ similarRequest($itemId);
     }
 
     function generateDetailHTML(jsonObj) {
-        if (jsonObj.Ack=='Failure') {
-            detail_text = "<div style='margin:auto;width:1000px;background-color:rgb(220,220,220);border:2px solid grey'>";
-            detail_text += "<p style='margin:0px;text-align:center;font-size:22px;'>Invalid or non-existent item ID</p>";
+        if (jsonObj.Ack == 'Failure') {
+            detail_text = "<div style='margin:auto;width:1000px;background-color:rgb(240,240,240);border:2px solid rgb(220,220,220)'>";
+            detail_text += "<p style='margin:0px;text-align:center;font-size:22px;'><b>Invalid or non-existent item ID</b></p>";
             detail_text += "</div>";
-            document.getElementById("pageDetail").innerHTML=detail_text;
-            return ;
+            return detail_text ;
         }
         root = jsonObj.DocumentElement;
         detail_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
@@ -959,7 +973,7 @@ similarRequest($itemId);
                     } else {
                         detail_text += "<tr>";
                         detail_text += "<td><b>" + key + "</b></td>";
-                        detail_text += "<td><img src='" + detail[key] + "' style='width:200px'></td>";
+                        detail_text += "<td><img src='" + detail[key] + "' style='height:300px;max-width:600px'></td>";
                         detail_text += "</tr>";
                     }
                 } else if (key == 'Location') {
@@ -991,8 +1005,26 @@ similarRequest($itemId);
         return detail_text;
     }
 
+    function generateSellerHTML(jsonObj) {
+        if (jsonObj == '') {
+            seller_text = "<div style='margin:auto;width:1000px;background-color:rgb(240,240,240);border:2px solid rgb(220,220,220)'>";
+            seller_text += "<p style='margin:0px;text-align:center;font-size:22px;'><b>No Seller Message Found</b></p>";
+            seller_text += "</div>";
+            document.getElementById("divSeller").innerHTML=seller_text;
+        } else {
+            document.getElementById("iframeSeller").srcdoc = jsonObj.Description;
+        }
+        return;
+    }
+
     function generateSimilarHTML(jsonObj) {
         root = jsonObj.DocumentElement;
+        if (jsonObj.length == 0) {
+            similar_text = "<div style='margin:auto;width:996px;background-color:rgb(240,240,240);border:2px solid rgb(220,220,220)'>";
+            similar_text += "<p style='margin:0px;text-align:center;font-size:22px;'><b>No Similar Items Found</b></p>";
+            similar_text += "</div>";
+            return similar_text;
+        }
         similar_text = "<html><head><title></title></head><body style='font-family:Times New Roman'>";
         similar_text += "<table id='similarTable'>";
         similar_text += "<tbody>";
@@ -1005,7 +1037,7 @@ similarRequest($itemId);
             similar_text += "<td>";
 
             if (similar['Photo'] != 'N/A') {
-                similar_text += "<img src='" + similar['Photo'] + "' style='width:200px' class=detailRefrence onclick=clickDetail(" + similar["ItemID"] + ")><br>";
+                similar_text += "<img src='" + similar['Photo'] + "' style='width:200px; max-height:300px;' class=detailRefrence onclick=clickDetail(" + similar["ItemID"] + ")><br>";
             }
             if (similar['Title'] != 'N/A') {
                 similar_text += "<p class=detailRefrence onclick=clickDetail(" + similar["ItemID"] + ")>" + similar['Title'] + "</p>";
@@ -1019,9 +1051,9 @@ similarRequest($itemId);
         {
             similar = jsonObj[i]; //get properties of a film (an object)
             //start a new row of the output table
-            similar_text += "<td>";
+            similar_text += "<td style='text-align:center'><b>";
             similar_text += similar['Price'];
-            similar_text += "</td>";
+            similar_text += "</b></td>";
 
         }
         similar_text += "</tr>";
